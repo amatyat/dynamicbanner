@@ -116,8 +116,8 @@ public class BannerCreator {
 		Script scriptTagSecond = new Script("");
 		scriptTagFirst.setAttribute("src", "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js");
 		scriptTagSecond.appendChild(new Text("$(document).ready(function(){\r\n" + 
-				"	$('.child-first').animate({left:\"150px\"}, \"slow\")\r\n" + 
-				"    					.animate({top:\"150px\"}, \"slow\")\r\n" + 
+				"	$('.child-first').animate({left:\"250px\"}, \"slow\")\r\n" + 
+				"    					.animate({top:\"250px\"}, \"slow\")\r\n" + 
 				"    					.animate({left:\"300px\"}, \"slow\")\r\n" + 
 				"    					.animate({top:\"0px\"}, \"slow\");\r\n" + 
 				"});"));
