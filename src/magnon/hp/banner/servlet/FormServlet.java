@@ -2,12 +2,17 @@ package magnon.hp.banner.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import magnon.hp.banner.model.BannerModel;
+import magnon.hp.banner.model.FrameModel;
 
 
 /**
@@ -38,45 +43,45 @@ public class FormServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
 		
-		System.out.println("username is: " + username);
-		System.out.println("password is: " + password);
-
-		String languages[] = request.getParameterValues("language");
-		String langHtml = "";
+		BannerModel bannerModel = new BannerModel();
 		
-		if (languages != null) {
-			System.out.println("Languages are: ");
-			for (String lang : languages) {
-				langHtml += lang + ",";
-				System.out.println("\t" + lang);
-			}
-		}
+		String canvas_width = request.getParameter("canvas_width");
+		String canvas_height = request.getParameter("canvas_height");
 		
-		String gender = request.getParameter("gender");
-		System.out.println("Gender is: " + gender);
-
+		String colorpicker = request.getParameter("colorpicker");
 		
-		String feedback = request.getParameter("feedback");
-		System.out.println("Feed back is: " + feedback);
-
-		String jobCategory = request.getParameter("jobCat");
-		System.out.println("Job category is: " + jobCategory);
+		String image = request.getParameter("file_name[1]");
+		
+		String banner_text = request.getParameter("banner_text[1]");
+		
+		List<FrameModel> frameList = new ArrayList<>();
+		
+		FrameModel frame = new FrameModel();
+		frame.setImage(image);
+		frame.setText(banner_text);
+		frameList.add(frame);
+		
+		bannerModel.setFrames(frameList);
+		
+		bannerModel.setCanvas_height(canvas_height);
+		bannerModel.setCanvas_width(canvas_width);
+		bannerModel.setColorpicker(colorpicker);
+		
+		System.out.println("Canvas Width is: " + canvas_width);
+		System.out.println("Canvas Height is: " + canvas_height);
 		
 		PrintWriter writer = response.getWriter();
 		
 		String htmlRespone = "<html><h3>";
-		htmlRespone += "username is: " + username + "<br/>";		
-		htmlRespone += "password is: " + password + "<br/>";		
-		htmlRespone += "language is: " + langHtml + "<br/>";		
-		htmlRespone += "gender is: " + gender + "<br/>";		
-		htmlRespone += "feedback is: " + feedback + "<br/>";		
-		htmlRespone += "job category is : " + jobCategory + "<br/>";		
+		htmlRespone += "canvas_width is: " + canvas_width + "<br/>";		
+		htmlRespone += "canvas_height is: " + canvas_height + "<br/>";	
+		htmlRespone += "image is: " + image + "<br/>";
+		htmlRespone += "banner_text is: " + banner_text + "<br/>";
+			
 		htmlRespone += "</h3></html>";
 		
-		htmlRespone+=BannerCreator.createHTML();
+		htmlRespone+=BannerCreator.createHTML(bannerModel);
 		
 		// return response
 		writer.println(htmlRespone);		

@@ -12,106 +12,113 @@
 	<link rel="stylesheet" href="assets/css/farbtastic.css" type="text/css" />
 </head>
 <body>
-<div class="upper-form-wrapper">
-	<div class="inner-wrapper">
-		<div class="field-container canvas-size">
-			<label>Choose canvas size : </label>
-			<div class="fields-wrapper">
-				<input type="text" id="canvas-width" name="canvas_width" class="field"/>px
-				<input type="text" id="canvas-height" name="canvas_height" class="field"/>px
+<div class="wrapper">
+	<form id="html-banner-generator" action="FormServlet" method="post">
+		<div class="upper-form-wrapper">
+			<div class="inner-wrapper">
+				<div class="field-container canvas-size">
+					<label class="lebel-align">Choose canvas size : </label>
+					<div class="fields-wrapper">
+						<input type="text" id="canvas-width" name="canvas_width" placeholder="px" class="field"/>
+						<input type="text" id="canvas-height" name="canvas_height" placeholder="px" class="field"/>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="field-container hpl-size">
+					<label class="lebel-align">Global Hyperlink : </label>
+					<div class="fields-wrapper">
+						<input type="text" id="hpl-link" name="hpl_link" class="field"/>
+						<select id="hpl-target" name="hpl_target" class="field">
+							<option value="_blank">_blank</option>
+							<option value="_self">_self</option>
+							<option value="_parent">_parent</option>
+							<option value="_top">_top</option>
+						</select>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="field-container border">
+					<label class="lebel-align">Border : </label>
+					<div class="fields-wrapper">
+						<label for="border-1">OFF</label>
+						<input type="radio" name="border" id="border-1" value="0" class="radio">
+						<label for="border-2">ON</label>
+						<input type="radio" name="border" id="border-2" value="1" class="radio">
+						<input type="text" id="colorpicker" name="colorpicker" value="#123456" class="field"/>
+						<div id="picker" style="display: none;"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="field-container loop">
+					<label class="lebel-align">Loop : </label>
+					<div class="fields-wrapper">
+						<label for="loop-1">OFF</label>
+						<input type="radio" name="loop" id="loop-1" value="0" class="radio">
+						<label for="loop-2">ON</label>
+						<input type="radio" name="loop" id="loop-2" value="1" class="radio">
+						<input type="text" id="no-of-time" name="no_of_time" placeholder="Enter No. of times" class="field" style="display: none;"/>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="field-container pause">
+					<label class="lebel-align">Pause on Hover : </label>
+					<div class="fields-wrapper">
+						<label for="pause-1">OFF</label>
+						<input type="radio" name="pause" id="pause-1" value="0" class="radio">
+						<label for="pause-2">ON</label>
+						<input type="radio" name="pause" id="pause-2" value="1" class="radio">
+					</div>
+					<div class="clear"></div>
+				</div>
 			</div>
-			<div class="clear"></div>
 		</div>
-		<div class="field-container hpl-size">
-			<label>Global Hyperlink : </label>
-			<div class="fields-wrapper">
-				<input type="text" id="hpl-link" name="hpl_link" class="field"/>
-				<select id="hpl-target" name="hpl_target" class="field">
-					<option value="_blank">_blank</option>
-					<option value="_self">_self</option>
-					<option value="_parent">_parent</option>
-					<option value="_top">_top</option>
-				</select>
+		<div class="lower-form-wrapper">
+			<div class="add-more">
+				<a id="add-more" href="javascrfipt:void(0);" title="Add More" class="add-more">Add More</a>
 			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="field-container border">
-			<label>Border : </label>
-			<div class="fields-wrapper">
-				<label for="border-1">OFF</label>
-				<input type="radio" name="border" id="border-1" value="off" class="radio">
-				<label for="border-2">ON</label>
-				<input type="radio" name="border" id="border-2" value="on" class="radio">
-				<input type="text" id="colorpicker" name="colorpicker" value="#123456" class="field"/>
-				<div id="picker" style="display: none;"></div>
+			<div class="inner-wrapper inner-wrapper-top">
+				<div class="field-container banner-image">
+					<label class="lebel-align">Image : </label>
+					<div class="fields-wrapper">
+						<label for="banner-first-image-1">OFF</label>
+						<input type="radio" name="banner_image[1]" id="banner-first-image-1" value="0" class="image-file radio">
+						<label for="banner-second-image-1">ON</label>
+						<input type="radio" name="banner_image[1]" id="banner-second-image-1" value="1" class="image-file radio">
+						<input type="file" name="file_name[1]" style="display: none;" class="image-field">
+						<select id="image-effect-1" name="image_effect[1]" style="display: none;" class="field select-effect">
+							<option value="0">Select Effect</option>
+							<option value="_blank">_blank</option>
+							<option value="_self">_self</option>
+							<option value="_parent">_parent</option>
+							<option value="_top">_top</option>
+						</select>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="field-container banner-image">
+					<label class="lebel-align">Text : </label>
+					<div class="fields-wrapper">
+						<label for="is-first-text-1">OFF</label>
+						<input type="radio" name="is_text[1]" id="is-first-text-1" value="0" class="banner-text radio">
+						<label for="is-second-text-1">ON</label>
+						<input type="radio" name="is_text[1]" id="is-second-text-1" value="1" class="banner-text radio">
+						<input type="text" name="banner_text[1]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
+						<select id="image-effect-1" name="image_effect[1]" style="display: none;" class="field select-text-effect">
+							<option value="0">Select Effect</option>
+							<option value="_blank">_blank</option>
+							<option value="_self">_self</option>
+							<option value="_parent">_parent</option>
+							<option value="_top">_top</option>
+						</select>
+					</div>
+					<div class="clear"></div>
+				</div>
 			</div>
-			<div class="clear"></div>
 		</div>
-		<div class="field-container loop">
-			<label>Loop : </label>
-			<div class="fields-wrapper">
-				<label for="loop-1">OFF</label>
-				<input type="radio" name="loop" id="loop-1" value="0" class="radio">
-				<label for="loop-2">ON</label>
-				<input type="radio" name="loop" id="loop-2" value="1" class="radio">
-				<input type="text" id="no-of-time" name="no_of_time" placeholder="Enter No. of times" class="field" style="display: none;"/>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="field-container pause">
-			<label>Pause on Hover : </label>
-			<div class="fields-wrapper">
-				<label for="pause-1">OFF</label>
-				<input type="radio" name="pause" id="pause-1" value="off" class="radio">
-				<label for="pause-2">ON</label>
-				<input type="radio" name="pause" id="pause-2" value="on" class="radio">
-			</div>
-			<div class="clear"></div>
-		</div>
-	</div>
-</div>
-<div class="lower-form-wrapper">
-	<div class="add-more">
-		<a id="add-more" href="javascrfipt:void(0);" title="Add More" class="add-more">Add More</a>
-	</div>
-	<div class="inner-wrapper inner-wrapper-top">
-		<div class="field-container banner-image">
-			<label>Image : </label>
-			<div class="fields-wrapper">
-				<label for="banner-first-image-1">OFF</label>
-				<input type="radio" name="banner_image[1]" id="banner-first-image-1" value="off" class="radio">
-				<label for="banner-second-image-1">ON</label>
-				<input type="radio" name="banner_image[1]" id="banner-second-image-1" value="on" class="radio">
-				<input type="file" name="file_name[1]">
-				<select id="image-effect-1" name="image_effect[1]" class="field">
-					<option>Select Effect</option>
-					<option value="_blank">_blank</option>
-					<option value="_self">_self</option>
-					<option value="_parent">_parent</option>
-					<option value="_top">_top</option>
-				</select>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="field-container banner-image">
-			<label>Text : </label>
-			<div class="fields-wrapper">
-				<label for="is-first-text-1">OFF</label>
-				<input type="radio" name="is_text[1]" id="is-first-text-1" value="0" class="banner-text radio">
-				<label for="is-second-text-1">ON</label>
-				<input type="radio" name="is_text[1]" id="is-second-text-1" value="1" class="banner-text radio">
-				<input type="text" name="banner_text[1]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
-				<select id="image-effect-1" name="image_effect[1]" class="field">
-					<option>Select Effect</option>
-					<option value="_blank">_blank</option>
-					<option value="_self">_self</option>
-					<option value="_parent">_parent</option>
-					<option value="_top">_top</option>
-				</select>
-			</div>
-			<div class="clear"></div>
-		</div>
-	</div>
+		 <div class="row">
+	      <input type="submit" value="Submit">
+	    </div>
+	</form>
 </div>
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function() {
@@ -138,8 +145,19 @@ $(document).ready(function() {
 	$(document).on('click', '.banner-text', function(){
 		if(parseInt($(this).val())){
 			$(this).siblings('.banner-text-field').show();
+			$(this).siblings('.select-text-effect').show();
 		}else{
 			$(this).siblings('.banner-text-field').hide().val('');
+			$(this).siblings('.select-text-effect').hide().val('0');
+		}
+	});
+	$(document).on('click', '.image-file', function(){
+		if(parseInt($(this).val())){
+			$(this).siblings('.image-field').show();
+			$(this).siblings('.select-effect').show();
+		}else{
+			$(this).siblings('.image-field').hide().val('');
+			$(this).siblings('.select-effect').hide().val('0');
 		}
 	});
 	

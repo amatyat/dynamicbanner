@@ -17,6 +17,8 @@ import com.hp.gagawa.java.elements.Style;
 import com.hp.gagawa.java.elements.Text;
 import com.hp.gagawa.java.elements.Title;
 
+import magnon.hp.banner.model.BannerModel;
+
 public class BannerCreator {
 	
 	public static void main(String[] args) throws UnsupportedEncodingException {
@@ -36,7 +38,7 @@ public class BannerCreator {
 	/**
 	 * @param args
 	 */
-	public static String createHTML() {
+	public static String createHTML(BannerModel bannerModel) {
 		BannerCreator obj = new BannerCreator();
 		Html html = new Html();
 	    Head head = new Head();
@@ -49,9 +51,9 @@ public class BannerCreator {
 	    Body body = new Body();
 	    //style
 	    String styleString = ".wrapper{\r\n" + 
-	    		"    width: 800px;\r\n" + 
-	    		"    height: 400px;\r\n" + 
-	    		"    background: #77b5fe;\r\n" + 
+	    		"    width: "+bannerModel.getCanvas_width()+"px;\r\n" + 
+	    		"    height: "+bannerModel.getCanvas_height()+"px;\r\n" + 
+	    		"    background: "+bannerModel.getColorpicker()+";\r\n" + 
 	    		"    position: relative;\r\n" + 
 	    		"}\r\n" + 
 	    		".child-first{\r\n" + 

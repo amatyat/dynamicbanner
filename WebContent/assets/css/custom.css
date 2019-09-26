@@ -1,8 +1,11 @@
 
-.fields-wrapper .field {width: 55px;}
+.wrapper {width: 900px;}
+.fields-wrapper .field {width: 55px; margin-right: 10px; height: 25px;}
 .inner-wrapper label {float: left;}
 .inner-wrapper .fields-wrapper {float: left; margin-left: 10px;}
 .clear {clear: both;}
 .field-container {padding: 10px 40px;}
 .fields-wrapper select {width: auto !important;}
 .fields-wrapper #hpl-link, .fields-wrapper #no-of-time, .fields-wrapper .banner-text-field {width: 200px !important;}
+.lebel-align {width: 200px;}
+.ui-checkboxradio-label {margin-right: 10px;}
