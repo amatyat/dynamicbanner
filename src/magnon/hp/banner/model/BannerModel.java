@@ -7,7 +7,10 @@ public class BannerModel {
 	private String canvas_height;
 	private String canvas_width;
 	private String colorpicker;
+	private String hpl_link;
+	private String target;
 	private List<FrameModel> frames;
+	
 	
 	public String getColorpicker() {
 		return colorpicker;
@@ -32,6 +35,18 @@ public class BannerModel {
 	}
 	public void setCanvas_width(String canvas_width) {
 		this.canvas_width = canvas_width;
+	}
+	public String getHpl_link() {
+		return hpl_link;
+	}
+	public void setHpl_link(String hpl_link) {
+		this.hpl_link = hpl_link;
+	}
+	public String getTarget() {
+		return target;
+	}
+	public void setTarget(String target) {
+		this.target = target;
 	}
 
 }

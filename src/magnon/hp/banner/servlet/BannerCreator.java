@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.URL;
 
 import com.hp.gagawa.java.elements.Body;
 import com.hp.gagawa.java.elements.Div;
@@ -55,6 +56,7 @@ public class BannerCreator {
 	    		"    height: "+bannerModel.getCanvas_height()+"px;\r\n" + 
 	    		"    background: "+bannerModel.getColorpicker()+";\r\n" + 
 	    		"    position: relative;\r\n" + 
+	    		"    cursor: pointer;\r\n" + 
 	    		"}\r\n" + 
 	    		".child-first{\r\n" + 
 	    		"    width: 100px;\r\n" + 
@@ -65,7 +67,7 @@ public class BannerCreator {
 	    //append style to html
 	    obj.appendStyle(styleString, html);
 	    //generate and append inner html to body
-	    obj.generateHtml(body);
+	    obj.generateHtml(body, bannerModel);
 	    //generate and append javascript
 	    obj.generateScript(body);
 	    //append body to html
@@ -102,10 +104,18 @@ public class BannerCreator {
 		html.appendChild(s);
 	}
 	
-	public void generateHtml(Body body) {
+	public void generateHtml(Body body, BannerModel bannerModel) {
 		Div wrapperDiv = new Div();
 		Div childFirstDiv = new Div();
+		String hpl_link = bannerModel.getHpl_link();
+		String target = bannerModel.getTarget();
 		wrapperDiv.setCSSClass("wrapper");
+		
+		if(isValid(hpl_link)) {
+			wrapperDiv.setAttribute("onclick", "window.location='"+ hpl_link +"'");
+			wrapperDiv.setAttribute("target", target);
+		}
+		
 		childFirstDiv.setCSSClass("child-first");
 		
 		wrapperDiv.appendChild(childFirstDiv);
@@ -127,6 +137,19 @@ public class BannerCreator {
 		body.appendChild(scriptTagFirst);
 		body.appendChild(scriptTagSecond);
 	}
+	
+	/* Returns true if url is valid */
+    public static boolean isValid(String url) 
+    { 
+        /* Try creating a valid URL */
+        try { 
+            new URL(url).toURI(); 
+            return true; 
+        }
+        catch (Exception e) { 
+            return false; 
+        } 
+    } 
 
 }
 

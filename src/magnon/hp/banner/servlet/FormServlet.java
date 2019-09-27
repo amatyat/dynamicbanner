@@ -51,6 +51,9 @@ public class FormServlet extends HttpServlet {
 		
 		String colorpicker = request.getParameter("colorpicker");
 		
+		String hpl_link = request.getParameter("hpl_link");
+		String target = request.getParameter("hpl_target");
+		
 		String image = request.getParameter("file_name[1]");
 		
 		String banner_text = request.getParameter("banner_text[1]");
@@ -67,6 +70,8 @@ public class FormServlet extends HttpServlet {
 		bannerModel.setCanvas_height(canvas_height);
 		bannerModel.setCanvas_width(canvas_width);
 		bannerModel.setColorpicker(colorpicker);
+		bannerModel.setHpl_link(hpl_link);
+		bannerModel.setTarget(target);
 		
 		System.out.println("Canvas Width is: " + canvas_width);
 		System.out.println("Canvas Height is: " + canvas_height);
@@ -78,6 +83,9 @@ public class FormServlet extends HttpServlet {
 		htmlRespone += "canvas_height is: " + canvas_height + "<br/>";	
 		htmlRespone += "image is: " + image + "<br/>";
 		htmlRespone += "banner_text is: " + banner_text + "<br/>";
+		htmlRespone += "hpl_link is: " + hpl_link + "<br/>";
+		htmlRespone += "target is: " + target + "<br/>";
+		
 			
 		htmlRespone += "</h3></html>";
 		
@@ -86,5 +94,7 @@ public class FormServlet extends HttpServlet {
 		// return response
 		writer.println(htmlRespone);		
 	}
+	
+	
 
 }
