@@ -9,8 +9,8 @@ public class JDBCConncetionProvider {   // Save as "JdbcSelectTest.java"
 		js.connect();// Step 5: Close conn and stmt - Done automatically by try-with-resources (JDK 7)
 	}
 
-	private String userName = "root";
-	private String password = "root";
+	private String userName = "bannerdbuser";
+	private String password = "bannerdbuser";
 	private String url = "jdbc:mysql://127.0.0.1:3306/banner?autoReconnect=true&useSSL=false";
 
 	public Connection connect()
@@ -20,7 +20,7 @@ public class JDBCConncetionProvider {   // Save as "JdbcSelectTest.java"
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 
 			conn  = DriverManager.getConnection(url,userName,password);
-
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

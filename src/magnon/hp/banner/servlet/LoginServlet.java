@@ -49,6 +49,7 @@ public class LoginServlet extends HttpServlet {
 				htmlRespone += "<h2>Your username is: " + username + "<br/>";	
 				if(password.equals(rs.getString(3))) {
 					htmlRespone += "Your Login is Successful</h2>";
+					response.sendRedirect("/BannerServlet/BannerForm.html");  
 				}else {
 					htmlRespone += "Your Password is incorrect. Please try again.</h2>";
 				}
@@ -60,9 +61,6 @@ public class LoginServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		// do some processing here...
-
-		
 
 		// return response
 		writer.println(htmlRespone);
