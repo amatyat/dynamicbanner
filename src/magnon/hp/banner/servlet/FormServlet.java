@@ -6,19 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
-
 
 /**
  * Servlet implementation class FormServlet
  */
 @WebServlet("/FormServlet")
+@MultipartConfig(maxFileSize = 16177215)  
 public class FormServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -54,7 +56,9 @@ public class FormServlet extends HttpServlet {
 		String hpl_link = request.getParameter("hpl_link");
 		String target = request.getParameter("hpl_target");
 		
-		String image = request.getParameter("file_name[1]");
+		Part filePart = request.getPart("file_name[1]"); // Retrieves <input type="file" name="file">
+	    String image = filePart.getSubmittedFileName();
+	    
 		
 		String banner_text = request.getParameter("banner_text[1]");
 		
