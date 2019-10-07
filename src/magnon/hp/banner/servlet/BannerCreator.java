@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.net.URL;
 
 import com.hp.gagawa.java.elements.Body;
@@ -19,8 +23,11 @@ import com.hp.gagawa.java.elements.Text;
 import com.hp.gagawa.java.elements.Title;
 
 import magnon.hp.banner.model.BannerModel;
+import magnon.hp.banner.model.FrameModel;
 
 public class BannerCreator {
+	
+	private static final String SAVE_BANNER_DIR = "F:\\Banner\\BannerServlet\\WebContent\\outputBanner";
 	
 	public static void main(String[] args) throws UnsupportedEncodingException {
 		
@@ -45,49 +52,61 @@ public class BannerCreator {
 	    Head head = new Head();
 	    html.appendChild(head);
 	    
-	    //add banner page title
-	    Title title = obj.setPageTitle("HTML 5 Banner");
-	    head.appendChild(title);
-	    //set body to html
-	    Body body = new Body();
-	    //style
-	    String styleString = ".wrapper{\r\n" + 
-	    		"    width: "+bannerModel.getCanvas_width()+"px;\r\n" + 
-	    		"    height: "+bannerModel.getCanvas_height()+"px;\r\n" + 
-	    		"    background: "+bannerModel.getColorpicker()+";\r\n" + 
-	    		"    position: relative;\r\n" + 
-	    		"    cursor: pointer;\r\n" + 
-	    		"}\r\n" + 
-	    		".child-first{\r\n" + 
-	    		"    width: 100px;\r\n" + 
-	    		"    height: 100px;\r\n" + 
-	    		"    background: #89fe76;\r\n" + 
-	    		"    position: absolute;\r\n" + 
-	    		"}";
-	    //append style to html
-	    obj.appendStyle(styleString, html);
-	    //generate and append inner html to body
-	    obj.generateHtml(body, bannerModel);
-	    //generate and append javascript
-	    obj.generateScript(body);
-	    //append body to html
-	    html.appendChild(body);
-	    
-	    //print html code
-	    System.out.println(html.write());
-	    
-	    //write html to file
-	    try {
-	        File output = new File("banner.html");
-	        PrintWriter out = new PrintWriter(new FileOutputStream(output));
-	        out.println(html.write());
-	        out.close();
-	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
-	    }
-	    
+	    List<FrameModel> frameList = new ArrayList<>();
+	    frameList = bannerModel.getFrames();
+	    if(!frameList.isEmpty()) {
+		    FrameModel firstFrame = frameList.get(0);
+		    
+		  //  System.out.println("List Text : " + firstFrame.getText());
+		    
+		    //add banner page title
+		    Title title = obj.setPageTitle("HTML 5 Banner");
+		    head.appendChild(title);
+		    //set body to html
+		    Body body = new Body();
+		    //style
+		    String styleString = ".wrapper{\r\n" + 
+		    		"    width: "+bannerModel.getCanvas_width()+"px;\r\n" + 
+		    		"    height: "+bannerModel.getCanvas_height()+"px;\r\n" + 
+		    		"    background: "+bannerModel.getColorpicker()+";\r\n" + 
+		    		"    position: relative;\r\n" + 
+		    		"    cursor: pointer;\r\n" + 
+		    		"}\r\n" + 
+		    		".child-first{\r\n" + 
+		    		"    width: 100px;\r\n" + 
+		    		"    height: 100px;\r\n" + 
+		    		"    background: #89fe76;\r\n" + 
+		    		"    position: absolute;\r\n";
+		    styleString += "	 background-image: url('images/" + firstFrame.getImageList().get(0).getImagePath() + "')";
+		    styleString += "}";
+		    //append style to html
+		    obj.appendStyle(styleString, html);
+		    //generate and append inner html to body
+		    obj.generateHtml(body, bannerModel, firstFrame);
+		    //generate and append javascript
+		    obj.generateScript(body);
+		    //append body to html
+		    html.appendChild(body);
+		    
+		    //print html code
+		    System.out.println(html.write());
+		    
+		    //write html to file
+		    try {
+		    	String saveBannerPath =  SAVE_BANNER_DIR+File.separator+bannerModel.getUsername();
+		    	File fileSaveDir = new File(saveBannerPath);
+		    	if (!fileSaveDir.exists()) {
+					fileSaveDir.mkdir(); 
+				}
+		        File output = new File(saveBannerPath + File.separator + "banner.html");
+		        PrintWriter out = new PrintWriter(new FileOutputStream(output));
+		        out.println(html.write());
+		        out.close();
+		    } catch (FileNotFoundException e) {
+		        e.printStackTrace();
+		    }
+		}
 	    return html.write();
-
 	}
 	
 	public Title setPageTitle(String pageTitle) {
@@ -104,7 +123,7 @@ public class BannerCreator {
 		html.appendChild(s);
 	}
 	
-	public void generateHtml(Body body, BannerModel bannerModel) {
+	public void generateHtml(Body body, BannerModel bannerModel, FrameModel firstFrame) {
 		Div wrapperDiv = new Div();
 		Div childFirstDiv = new Div();
 		String hpl_link = bannerModel.getHpl_link();
@@ -115,6 +134,8 @@ public class BannerCreator {
 			wrapperDiv.setAttribute("onclick", "window.location='"+ hpl_link +"'");
 			wrapperDiv.setAttribute("target", target);
 		}
+		
+		childFirstDiv.appendText(firstFrame.getTextList().get(0).getText());
 		
 		childFirstDiv.setCSSClass("child-first");
 		

@@ -81,11 +81,13 @@
 					<label class="lebel-align">Image : </label>
 					<div class="fields-wrapper">
 						<label for="banner-first-image-1">OFF</label>
-						<input type="radio" name="banner_image[1]" id="banner-first-image-1" value="0" class="image-file radio">
+						<input type="radio" name="banner_image[]" id="banner-first-image-1" value="0" class="image-file radio">
 						<label for="banner-second-image-1">ON</label>
-						<input type="radio" name="banner_image[1]" id="banner-second-image-1" value="1" class="image-file radio">
-						<input type="file" name="file_name[1]" style="display: none;" class="image-field">
-						<select id="image-effect-1" name="image_effect[1]" style="display: none;" class="field select-effect">
+						<input type="radio" name="banner_image[]" id="banner-second-image-1" value="1" class="image-file radio">
+						<input type="file" name="file_name[]" style="display: none;" class="image-field">
+						<input type="text" name="imame_start_time[]" style="display: none;" placeholder="Start Time" class="time-field image-field">
+						<input type="text" name="image_stop_time[]" style="display: none;" placeholder="End Time" class="time-field image-field">
+						<select id="image-effect-1" name="image_effect[]" style="display: none;" class="field select-effect">
 							<option value="0">Select Effect</option>
 							<option value="_blank">_blank</option>
 							<option value="_self">_self</option>
@@ -99,11 +101,13 @@
 					<label class="lebel-align">Text : </label>
 					<div class="fields-wrapper">
 						<label for="is-first-text-1">OFF</label>
-						<input type="radio" name="is_text[1]" id="is-first-text-1" value="0" class="banner-text radio">
+						<input type="radio" name="is_text[]" id="is-first-text-1" value="0" class="banner-text radio">
 						<label for="is-second-text-1">ON</label>
-						<input type="radio" name="is_text[1]" id="is-second-text-1" value="1" class="banner-text radio">
-						<input type="text" name="banner_text[1]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
-						<select id="image-effect-1" name="image_effect[1]" style="display: none;" class="field select-text-effect">
+						<input type="radio" name="is_text[]" id="is-second-text-1" value="1" class="banner-text radio">
+						<input type="text" name="banner_text[]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
+						<input type="text" name="text_start_time[]" placeholder="Start Time" class="time-field" style="display: none;"/>
+						<input type="text" name="text_end_time[]" placeholder="End Time" class="time-field" style="display: none;"/>
+						<select id="image-effect-1" name="image_effect[]" style="display: none;" class="field select-text-effect">
 							<option value="0">Select Effect</option>
 							<option value="_blank">_blank</option>
 							<option value="_self">_self</option>
@@ -145,9 +149,11 @@ $(document).ready(function() {
 	$(document).on('click', '.banner-text', function(){
 		if(parseInt($(this).val())){
 			$(this).siblings('.banner-text-field').show();
+			$(this).siblings('.time-field').show();
 			$(this).siblings('.select-text-effect').show();
 		}else{
 			$(this).siblings('.banner-text-field').hide().val('');
+			$(this).siblings('.time-field').hide().val('');
 			$(this).siblings('.select-text-effect').hide().val('0');
 		}
 	});

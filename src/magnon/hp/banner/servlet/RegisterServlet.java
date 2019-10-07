@@ -45,16 +45,16 @@ public class RegisterServlet extends HttpServlet {
 		try {
 
 			PreparedStatement ps = con.prepareStatement
-					("insert into banneruser values(?,?,?)");
+					("insert into user values(?,?,?)");
 
-			ps.setInt(1, 103);
+			ps.setInt(1, 106);
 			ps.setString(2, username);
 			ps.setString(3, password);
-			//int i = ps.executeUpdate();
+			int i = ps.executeUpdate();
 
-		/*	if(i > 0) {
+			if(i > 0) {
 				htmlRespone += "You are sucessfully registered";
-			}*/
+			}
 
 			htmlRespone += "<h2>Your username is: " + username + "<br/>";	
 			htmlRespone += "</html>";

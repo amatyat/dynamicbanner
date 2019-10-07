@@ -50,11 +50,14 @@ public class LoginServlet extends HttpServlet {
 				System.out.print("\tName: "+rs.getString(2));
 				System.out.print("\tPassword: "+rs.getString(3));
 				session.setAttribute("UserName", username);
-				htmlRespone += "<h2>Your username is: " + username + "<br/>";	
+				System.out.print("<h2>Your username is: " + username + "<br/>");	
+				
 				if(password.equals(rs.getString(3))) {
+					System.out.println("yay");
 					htmlRespone += "Your Login is Successful</h2>";
 					response.sendRedirect("/BannerServlet/BannerForm.html");  
 				}else {
+					System.out.println("no");
 					htmlRespone += "Your Password is incorrect. Please try again.</h2>";
 				}
 				htmlRespone += "</html>";

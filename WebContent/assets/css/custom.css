@@ -1,6 +1,7 @@
 
-.wrapper {width: 900px;}
-.fields-wrapper .field {width: 55px; margin-right: 10px; height: 25px;}
+.wrapper {/*width: 900px;*/}
+.fields-wrapper .field {width: 65px; margin-right: 10px; height: 25px;}
+.fields-wrapper .time-field {width: 65px!important; margin-right: 10px; height: 25px;}
 .inner-wrapper label {float: left;}
 .inner-wrapper .fields-wrapper {float: left; margin-left: 10px;}
 .clear {clear: both;}

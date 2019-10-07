@@ -5,6 +5,7 @@ import java.util.List;
 public class BannerModel {
 	
 	private String canvas_height;
+	private String username;
 	private String canvas_width;
 	private String colorpicker;
 	private String hpl_link;
@@ -47,6 +48,12 @@ public class BannerModel {
 	}
 	public void setTarget(String target) {
 		this.target = target;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

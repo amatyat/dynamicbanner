@@ -1,21 +1,23 @@
 package magnon.hp.banner.model;
 
+import java.util.List;
+
 public class FrameModel {
 	
-	private String image;
-	private String text;
+	private List<ImageModel> imageList;
+	private List<TextModel> textList;
+	public List<ImageModel> getImageList() {
+		return imageList;
+	}
+	public void setImageList(List<ImageModel> imageList) {
+		this.imageList = imageList;
+	}
+	public List<TextModel> getTextList() {
+		return textList;
+	}
+	public void setTextList(List<TextModel> textList) {
+		this.textList = textList;
+	}
 	
-	public String getImage() {
-		return image;
-	}
-	public void setImage(String image) {
-		this.image = image;
-	}
-	public String getText() {
-		return text;
-	}
-	public void setText(String text) {
-		this.text = text;
-	}
 
 }
