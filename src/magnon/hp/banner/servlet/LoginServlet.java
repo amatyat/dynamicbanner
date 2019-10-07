@@ -11,6 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.catalina.Session;
 
 import magnon.hp.banner.db.JDBCConncetionProvider;
 
@@ -26,6 +29,7 @@ public class LoginServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		JDBCConncetionProvider jConncetionProvider = new JDBCConncetionProvider();
 		Connection con = jConncetionProvider.connect();
+		HttpSession session = request.getSession();
 		// read form fields
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -45,7 +49,7 @@ public class LoginServlet extends HttpServlet {
 			while (rs.next()) {
 				System.out.print("\tName: "+rs.getString(2));
 				System.out.print("\tPassword: "+rs.getString(3));
-			
+				session.setAttribute("UserName", username);
 				htmlRespone += "<h2>Your username is: " + username + "<br/>";	
 				if(password.equals(rs.getString(3))) {
 					htmlRespone += "Your Login is Successful</h2>";

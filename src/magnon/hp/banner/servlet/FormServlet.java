@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import magnon.hp.banner.model.BannerModel;
@@ -45,7 +46,7 @@ public class FormServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
+		HttpSession session = request.getSession();
 		BannerModel bannerModel = new BannerModel();
 		
 		String canvas_width = request.getParameter("canvas_width");
@@ -83,6 +84,7 @@ public class FormServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		
 		String htmlRespone = "<html><h3>";
+		htmlRespone += "user is: " + session.getAttribute("UserName")+ "<br/>";	
 		htmlRespone += "canvas_width is: " + canvas_width + "<br/>";		
 		htmlRespone += "canvas_height is: " + canvas_height + "<br/>";	
 		htmlRespone += "image is: " + image + "<br/>";
