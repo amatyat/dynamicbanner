@@ -6,6 +6,7 @@ public class BannerModel {
 	
 	private String canvas_height;
 	private String username;
+	private String foldername;
 	private String canvas_width;
 	private String colorpicker;
 	private String hpl_link;
@@ -54,6 +55,12 @@ public class BannerModel {
 	}
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	public String getFoldername() {
+		return foldername;
+	}
+	public void setFoldername(String foldername) {
+		this.foldername = foldername;
 	}
 
 }

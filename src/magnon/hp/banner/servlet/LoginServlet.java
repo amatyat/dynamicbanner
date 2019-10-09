@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.Session;
-
 import magnon.hp.banner.db.JDBCConncetionProvider;
 
 @WebServlet("/loginServlet")
@@ -44,7 +42,7 @@ public class LoginServlet extends HttpServlet {
 		try {
 
 			Statement statement = con.createStatement();
-			String queryString = "select * from user where name='"+username+"'";
+			String queryString = "select * from banneruser where name='"+username+"'";
 			ResultSet rs = statement.executeQuery(queryString);
 			while (rs.next()) {
 				System.out.print("\tName: "+rs.getString(2));

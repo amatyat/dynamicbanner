@@ -5,13 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-import java.net.URL;
 
 import com.hp.gagawa.java.elements.Body;
 import com.hp.gagawa.java.elements.Div;
@@ -22,6 +23,7 @@ import com.hp.gagawa.java.elements.Style;
 import com.hp.gagawa.java.elements.Text;
 import com.hp.gagawa.java.elements.Title;
 
+import magnon.hp.banner.db.JDBCConncetionProvider;
 import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
 
@@ -93,7 +95,7 @@ public class BannerCreator {
 		    
 		    //write html to file
 		    try {
-		    	String saveBannerPath =  SAVE_BANNER_DIR+File.separator+bannerModel.getUsername();
+		    	String saveBannerPath =  SAVE_BANNER_DIR+File.separator+bannerModel.getUsername()+File.separator+bannerModel.getFoldername();
 		    	File fileSaveDir = new File(saveBannerPath);
 		    	if (!fileSaveDir.exists()) {
 					fileSaveDir.mkdir(); 
@@ -106,6 +108,28 @@ public class BannerCreator {
 		        e.printStackTrace();
 		    }
 		}
+	    
+		Connection con = new JDBCConncetionProvider().connect();
+	    
+		String SQL_INSERT = "INSERT INTO banner_details (name, banner_name, created_date) VALUES (?,?,?)";
+
+		// build HTML code
+		try {
+
+			PreparedStatement ps = con.prepareStatement
+					(SQL_INSERT);
+			Date sqlDate = new Date(new java.util.Date().getTime());
+			
+			ps.setString(1, bannerModel.getUsername());
+			ps.setString(2, bannerModel.getFoldername());
+			ps.setDate(3, sqlDate);
+			int i = ps.executeUpdate();
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	    return html.write();
 	}
 	

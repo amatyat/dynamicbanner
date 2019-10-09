@@ -39,23 +39,21 @@ public class RegisterServlet extends HttpServlet {
 		System.out.println("email: " + email);
 		// get response writer
 		PrintWriter writer = response.getWriter();
+		String SQL_INSERT = "INSERT INTO banneruser (name, password) VALUES (?,?)";
 
 		// build HTML code
 		String htmlRespone = "<html>";
 		try {
 
 			PreparedStatement ps = con.prepareStatement
-					("insert into user values(?,?,?)");
-
-			ps.setInt(1, 106);
-			ps.setString(2, username);
-			ps.setString(3, password);
+					(SQL_INSERT);
+			ps.setString(1, username);
+			ps.setString(2, password);
 			int i = ps.executeUpdate();
 
 			if(i > 0) {
 				htmlRespone += "You are sucessfully registered";
 			}
-
 			htmlRespone += "<h2>Your username is: " + username + "<br/>";	
 			htmlRespone += "</html>";
 
