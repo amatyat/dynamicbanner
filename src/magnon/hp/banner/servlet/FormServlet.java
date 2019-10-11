@@ -24,6 +24,7 @@ import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
 import magnon.hp.banner.model.ImageModel;
 import magnon.hp.banner.model.TextModel;
+import magnon.hp.banner.util.ZipUtil;
 
 /**
  * Servlet implementation class FormServlet
@@ -274,6 +275,7 @@ public class FormServlet extends HttpServlet {
 
 		htmlRespone += "Download Banners from below: <br/>";
 		System.out.println(bannerModel.getUsername());
+		
 		htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+bannerModel.getFoldername()+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+bannerModel.getFoldername()+"</a>";
 
 		JDBCConncetionProvider jConncetionProvider = new JDBCConncetionProvider();

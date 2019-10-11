@@ -21,6 +21,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import magnon.hp.banner.util.ZipUtil;
+
 @WebServlet("/UploadDownloadFileServlet")
 public class UploadDownloadFileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -67,17 +69,20 @@ public class UploadDownloadFileServlet extends HttpServlet {
 		if(fileName == null || fileName.equals("")){
 			throw new ServletException("File Name can't be null or empty");
 		}
-		File file = new File("F:\\Banner\\BannerServlet\\WebContent\\outputBanner"+File.separator+user+File.separator+folder+File.separator+fileName);
-		if(!file.exists()){
-			throw new ServletException("File doesn't exists on server.");
+		
+		File zipfile = new File("F:\\Banner\\BannerServlet\\WebContent\\outputBanner"+File.separator+user+File.separator+folder+File.separator+folder+".zip");
+		File dir = new File("F:\\Banner\\BannerServlet\\WebContent\\outputBanner"+File.separator+user+File.separator+folder);
+		
+		if(!zipfile.exists()){
+			  ZipUtil.zipDirectory(dir, zipfile.getAbsolutePath());
 		}
-		System.out.println("File location on server::"+file.getAbsolutePath());
+		System.out.println("File location on server::"+zipfile.getAbsolutePath());
 		ServletContext ctx = getServletContext();
-		InputStream fis = new FileInputStream(file);
-		String mimeType = ctx.getMimeType(file.getAbsolutePath());
+		InputStream fis = new FileInputStream(zipfile);
+		String mimeType = ctx.getMimeType(zipfile.getAbsolutePath());
 		response.setContentType(mimeType != null? mimeType:"application/octet-stream");
-		response.setContentLength((int) file.length());
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+		response.setContentLength((int) zipfile.length());
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + folder + ".zip\"");
 		
 		ServletOutputStream os       = response.getOutputStream();
 		byte[] bufferData = new byte[1024];
