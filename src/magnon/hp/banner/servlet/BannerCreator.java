@@ -26,6 +26,8 @@ import com.hp.gagawa.java.elements.Title;
 import magnon.hp.banner.db.JDBCConncetionProvider;
 import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
+import magnon.hp.banner.model.ImageModel;
+import magnon.hp.banner.model.TextModel;
 
 public class BannerCreator {
 	
@@ -57,15 +59,20 @@ public class BannerCreator {
 	    List<FrameModel> frameList = new ArrayList<>();
 	    frameList = bannerModel.getFrames();
 	    if(!frameList.isEmpty()) {
-		    FrameModel firstFrame = frameList.get(0);
-		    
-		  //  System.out.println("List Text : " + firstFrame.getText());
 		    
 		    //add banner page title
 		    Title title = obj.setPageTitle("HTML 5 Banner");
 		    head.appendChild(title);
 		    //set body to html
 		    Body body = new Body();
+		    //wrapper container of banner
+		    String cssClass = "wrapper";
+		    String id = null;
+		    Div wrapperDiv = obj.divContainerCreator(id, cssClass);
+		    wrapperDiv = obj.addHyperlinkToBannerWrapperContainer(bannerModel, wrapperDiv);
+		    
+	    	//FrameModel firstFrame = frameList.get(0);
+	    	
 		    //style
 		    String styleString = ".wrapper{\r\n" + 
 		    		"    width: "+bannerModel.getCanvas_width()+"px;\r\n" + 
@@ -73,20 +80,36 @@ public class BannerCreator {
 		    		"    background: "+bannerModel.getColorpicker()+";\r\n" + 
 		    		"    position: relative;\r\n" + 
 		    		"    cursor: pointer;\r\n" + 
-		    		"}\r\n" + 
-		    		".child-first{\r\n" + 
-		    		"    width: 100px;\r\n" + 
-		    		"    height: 100px;\r\n" + 
-		    		"    background: #89fe76;\r\n" + 
-		    		"    position: absolute;\r\n";
-		    styleString += "	 background-image: url('images/" + firstFrame.getImageList().get(0).getImagePath() + "')";
-		    styleString += "}";
-		    //append style to html
-		    obj.appendStyle(styleString, html);
-		    //generate and append inner html to body
-		    obj.generateHtml(body, bannerModel, firstFrame);
-		    //generate and append javascript
-		    obj.generateScript(body);
+		    		"}\r\n";
+		    
+		    List<ImageModel> frameImageElementList = new ArrayList<>();
+	    	//iterate multiple frames of banner
+	    	for (FrameModel firstFrame : frameList) {
+	    		
+	    		frameImageElementList = firstFrame.getImageList();
+	    		for (int i = 0; i < frameImageElementList.size(); i++) {
+	    			styleString +=  ".child-first-" + (i + 1 ) + "{\r\n" + 
+	    		    		"    width: 100px;\r\n" + 
+	    		    		"    height: 100px;\r\n" + 
+	    		    		"    background: #89fe76;\r\n" + 
+	    		    		"    position: absolute;\r\n";
+				    styleString += "	 background-image: url('images/" + frameImageElementList.get(i).getImagePath() + "')";
+				    styleString += "}\r\n";
+				    
+				    styleString += ".child-second-" + (i + 1 ) + "{\r\n" + 
+				    		"    width: 100px;\r\n" + 
+				    		"    height: 100px;\r\n" + 
+				    		"    background: #FFC0CB;\r\n" + 
+				    		"    position: absolute;\r\n}";
+				    //append style to html
+				    obj.appendStyle(styleString, html);
+	    		}
+				    //generate and append inner html to body
+				    obj.generateHtml(body, bannerModel, firstFrame, wrapperDiv);
+				    //generate and append javascript
+				    obj.generateScript(body, firstFrame);
+	    		
+	    	}
 		    //append body to html
 		    html.appendChild(body);
 		    
@@ -133,6 +156,18 @@ public class BannerCreator {
 	    return html.write();
 	}
 	
+	public Div divContainerCreator(String elementId, String cssClass) {
+		Div divContainer = new Div();
+		//set element css class
+		divContainer.setCSSClass(cssClass);
+		//set element id if not null
+		if(elementId != null) {
+			divContainer.setId(elementId);
+		}
+		
+		return divContainer;
+	}
+	
 	public Title setPageTitle(String pageTitle) {
 		Title title = new Title();
 	    title.appendChild(new Text("HTML 5 Banner"));
@@ -147,25 +182,106 @@ public class BannerCreator {
 		html.appendChild(s);
 	}
 	
-	public void generateHtml(Body body, BannerModel bannerModel, FrameModel firstFrame) {
-		Div wrapperDiv = new Div();
-		Div childFirstDiv = new Div();
+	public Div addHyperlinkToBannerWrapperContainer(BannerModel bannerModel, Div wrapperDiv) {
 		String hpl_link = bannerModel.getHpl_link();
 		String target = bannerModel.getTarget();
-		wrapperDiv.setCSSClass("wrapper");
-		
 		if(isValid(hpl_link)) {
 			wrapperDiv.setAttribute("onclick", "window.location='"+ hpl_link +"'");
 			wrapperDiv.setAttribute("target", target);
 		}
 		
-		childFirstDiv.appendText(firstFrame.getTextList().get(0).getText());
-		
-		childFirstDiv.setCSSClass("child-first");
-		
-		wrapperDiv.appendChild(childFirstDiv);
+		return wrapperDiv;
+	}
+	
+	public void generateHtml(Body body, BannerModel bannerModel, FrameModel firstFrame, Div wrapperDiv) {
+		String cssClass = "";
+		String elementId = "";
+		List<ImageModel> frameImageElementList = firstFrame.getImageList();
+		List<TextModel> frameTextElementList = firstFrame.getTextList();
+		for (int i = 0; i < frameImageElementList.size(); i++) {
+			cssClass = "child-first-" + (i + 1 );
+			elementId = "child-first-" + (i + 1 );
+			Div childFirstDiv = divContainerCreator(elementId, cssClass);
+			
+			cssClass = "child-second-" + (i + 1 );
+			elementId = "child-second-" + (i + 1 );
+			Div childSecondDiv = divContainerCreator(elementId, cssClass);
+			
+			childFirstDiv.appendText("" + frameImageElementList.get(i).getOnTime() + frameImageElementList.get(i).getOffTime());
+			childSecondDiv.appendText(frameTextElementList.get(i).getText() + " " + frameTextElementList.get(i).getOnTime() + " " + frameTextElementList.get(i).getOffTime());
+			wrapperDiv.appendChild(childFirstDiv);
+			wrapperDiv.appendChild(childSecondDiv);
+		}
 		
 		body.appendChild(wrapperDiv);
+	}
+	
+	private void generateScript(Body body, FrameModel firstFrame) {
+		List<ImageModel> frameImageElementList = firstFrame.getImageList();
+		List<TextModel> frameTextElementList = firstFrame.getTextList();
+		//image on/off times in sec
+		Float imageAnimationStartTime, imageAnimationEndTime;
+		
+		//image on/off coordinates
+		Float imageAnimationStartX, imageAnimationStartY, imageAnimationStopX, imageAnimationStopY;
+		
+		//text on/off times in sec
+		Float textAnimationStartTime, textAnimationEndTime;
+		
+		//text on/off coordinates
+		Float textAnimationStartX, textAnimationStartY, textAnimationStopX, textAnimationStopY;
+		
+		//TweenMax javascript for animation
+		Script scriptTagFirst = new Script("");
+		Script scriptTagSecond = new Script("");
+		scriptTagFirst.setAttribute("type", "text/javascript");
+		scriptTagFirst.setAttribute("src", "https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js");
+		scriptTagSecond.setAttribute("type", "text/javascript");
+		
+		System.out.print("Text Size : " + firstFrame.getTextList().size());
+		
+		for (int i = 0; i < frameImageElementList.size(); i++) {
+			//image on/off times in sec
+			imageAnimationStartTime = firstFrame.getImageList().get(i).getOnTime();
+			imageAnimationEndTime = firstFrame.getImageList().get(i).getOffTime();
+			imageAnimationEndTime = (imageAnimationEndTime - imageAnimationStartTime);
+			
+			//image on/off coordinates
+			imageAnimationStartX = firstFrame.getImageList().get(i).getSartCoordinateX();
+			imageAnimationStartY = firstFrame.getImageList().get(i).getSartCoordinateY();
+			imageAnimationStopX = firstFrame.getImageList().get(i).getStopCoordinateX();
+			imageAnimationStopY = firstFrame.getImageList().get(i).getStopCoordinateY();
+			
+			//text on/off times in sec
+			textAnimationStartTime = firstFrame.getTextList().get(i).getOnTime();
+			textAnimationEndTime = firstFrame.getTextList().get(i).getOffTime();
+			textAnimationEndTime = (textAnimationEndTime - textAnimationStartTime);
+			
+			//text on/off coordinates
+			textAnimationStartX = firstFrame.getTextList().get(i).getSartCoordinateX();
+			textAnimationStartY = firstFrame.getTextList().get(i).getSartCoordinateY();
+			textAnimationStopX = firstFrame.getTextList().get(i).getStopCoordinateX();
+			textAnimationStopY = firstFrame.getTextList().get(i).getStopCoordinateY();
+			
+			//TweenMax javascript for animation
+			String animateInLoop;
+			animateInLoop = "{repeat:-1}";
+			scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+					"var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" +
+					"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"child-first-" + (i + 1 ) + "\");\r\n" + 
+					"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + "});\r\n" +
+					"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + "}, " + imageAnimationStartTime + ")\r\n" + 
+					"			.to(childDivFirst" + (i + 1 ) + ", 2, {width: 200, height: 200})\r\n" + 
+					"			.to(childDivFirst" + (i + 1 ) + ", 2, {css:{borderRadius: \"50%\"}})\r\n" + 
+					"			.to(childDivFirst" + (i + 1 ) + ", 2, {width: 100, height: 100});\r\n" +
+					"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"child-second-" + (i + 1 ) + "\");\r\n" +
+					"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + "});\r\n" +
+					"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {x: " + textAnimationStopX + ", y: " + textAnimationStopY + "}, " + textAnimationStartTime + ");"));
+		}
+		
+		//append javascript code in body tag of HTML content of banner
+		body.appendChild(scriptTagFirst);
+		body.appendChild(scriptTagSecond);
 	}
 	
 	private void generateScript(Body body) {

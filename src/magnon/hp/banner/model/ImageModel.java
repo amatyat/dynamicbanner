@@ -6,6 +6,10 @@ public class ImageModel {
 	private String imagePath;
 	private float onTime;
 	private float offTime;
+	private float sartCoordinateX;
+	private float sartCoordinateY;
+	private float stopCoordinateX;
+	private float stopCoordinateY;
 	private String effect;
 	
 	public String getImagePath() {
@@ -37,6 +41,30 @@ public class ImageModel {
 	}
 	public void setIsImage(int isImage) {
 		this.isImage = isImage;
+	}
+	public float getSartCoordinateX() {
+		return sartCoordinateX;
+	}
+	public void setSartCoordinateX(float sartCoordinateX) {
+		this.sartCoordinateX = sartCoordinateX;
+	}
+	public float getSartCoordinateY() {
+		return sartCoordinateY;
+	}
+	public void setSartCoordinateY(float sartCoordinateY) {
+		this.sartCoordinateY = sartCoordinateY;
+	}
+	public float getStopCoordinateX() {
+		return stopCoordinateX;
+	}
+	public void setStopCoordinateX(float stopCoordinateX) {
+		this.stopCoordinateX = stopCoordinateX;
+	}
+	public float getStopCoordinateY() {
+		return stopCoordinateY;
+	}
+	public void setStopCoordinateY(float stopCoordinateY) {
+		this.stopCoordinateY = stopCoordinateY;
 	}
 	
 

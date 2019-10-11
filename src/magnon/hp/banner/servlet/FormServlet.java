@@ -77,6 +77,29 @@ public class FormServlet extends HttpServlet {
 		String target = request.getParameter("hpl_target");
 
 		List<FrameModel> frameList = new ArrayList<>();
+		
+
+		//frame image start and stop time in sec
+		String[] imageStartTimings = request.getParameterValues("image_start_time[]");
+		String[] imageStopTimings = request.getParameterValues("image_stop_time[]");
+		
+		//frame image start and stop coordinates
+		String[] imageStartCoordinates = request.getParameterValues("image_start_xy[]");
+		String[] imageStopCoordinates = request.getParameterValues("image_stop_xy[]");
+		
+		//frame text array
+		String[] bannerTextArray;
+		bannerTextArray = request.getParameterValues("banner_text[]");
+		
+		
+		//frame text start and stop time in sec
+		String[] textStartTimings = request.getParameterValues("text_start_time[]");
+		String[] textStopTimings = request.getParameterValues("text_end_time[]");
+		
+		//frame image start and stop coordinates
+		String[] textStartCoordinates = request.getParameterValues("text_start_xy[]");
+		String[] textStopCoordinates = request.getParameterValues("text_stop_xy[]");
+
 
 		bannerModel.setFrames(frameList);
 
@@ -104,31 +127,70 @@ public class FormServlet extends HttpServlet {
 			if(!fileName.isEmpty()) {
 				ImageModel imageModel = new ImageModel();
 				
-				File userSaveDir = new File(savePath+"\\"+bannerModel.getFoldername());
-				System.out.println("save"+userSaveDir);
-				if (!userSaveDir.exists()) {
-					System.out.println("no exist"+userSaveDir);
-					userSaveDir.mkdir(); 
-				}
 				File filesSaveDir = new File(savePath);
 				System.out.println("save"+savePath);
 				if (!filesSaveDir.exists()) {
 					System.out.println("no exist"+savePath);
 					filesSaveDir.mkdir(); 
 				}
-				File filesSaveImageDir = new File(savePath+"\\images");
+				File userSaveDir = new File(savePath+"\\"+bannerModel.getFoldername());
+				System.out.println("save"+userSaveDir);
+				if (!userSaveDir.exists()) {
+					System.out.println("no exist"+userSaveDir);
+					userSaveDir.mkdir(); 
+				}
+			
+				File filesSaveImageDir = new File(savePath+"\\"+bannerModel.getFoldername()+"\\images");
 				if (!filesSaveImageDir.exists()) {
 					System.out.println("no exist 2"+filesSaveImageDir.getAbsolutePath());
 					filesSaveImageDir.mkdir(); 
 				}
-				part.write(savePath+File.separator+"images" + File.separator + fileName);
-				//System.out.println(counter+request.getParameter("image_stop_time[" + counter + "]"));
-				float imageOnTime = Float.parseFloat(request.getParameter("imame_start_time[" + counter + "]")!= null ? request.getParameter("imame_start_time[" + counter + "]"):"0");
-				float imageOffTime = Float.parseFloat(request.getParameter("image_stop_time[" + counter + "]")!=null?request.getParameter("image_stop_time[" + counter + "]"):"1");
-
+				part.write(savePath+"\\"+bannerModel.getFoldername()+File.separator+"images" + File.separator + fileName);
+				
+				String onTime = imageStartTimings[counter];
+				String offTime = imageStopTimings[counter];
+				float imageOnTime = 0, imageOffTime = 0;
+				if(onTime.trim().length() > 0) {
+					imageOnTime = Float.parseFloat(onTime);
+				}
+				if(offTime.trim().length() > 0) {
+					imageOffTime = Float.parseFloat(offTime);
+				}
+				
+				String startCoordinates = imageStartCoordinates[counter];
+				String stopCoordinates = imageStopCoordinates[counter];
+				String[] startCoordinatesArray, stopCoordinatesArray;
+				float startCoordinateX = 0, startCoordinateY = 0, stopCoordinateX = 0, stopCoordinateY = 0;
+				//check if start coordinate string is not empty and must contains a "," 
+				//if((startCoordinates.trim().length() > 0) && (StringUtils.countMatches(startCoordinates, ",") == 1)) {
+				if((startCoordinates.trim().length() > 0)) {
+					startCoordinatesArray = startCoordinates.split(",");
+					if(startCoordinatesArray[0].length() > 0) {
+						startCoordinateX = Float.parseFloat(startCoordinatesArray[0]);
+					}
+					if(startCoordinatesArray[1].length() > 0) {
+						startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
+					}
+				}
+				//check if start coordinate string is not empty and must contains a "," 
+				//if((stopCoordinates.trim().length() > 0) && (StringUtils.countMatches(stopCoordinates, ",") == 1)) {
+				if((stopCoordinates.trim().length() > 0)) {
+					stopCoordinatesArray = stopCoordinates.split(",");
+					if(stopCoordinatesArray[0].length() > 0) {
+						stopCoordinateX = Float.parseFloat(stopCoordinatesArray[0]);
+					}
+					if(stopCoordinatesArray[1].length() > 0) {
+						stopCoordinateY = Float.parseFloat(stopCoordinatesArray[1]);
+					}
+				}
+				
 				imageModel.setImagePath(fileName);
 				imageModel.setOnTime(imageOnTime);
 				imageModel.setOffTime(imageOffTime);
+				imageModel.setSartCoordinateX(startCoordinateX);
+				imageModel.setSartCoordinateY(startCoordinateY);
+				imageModel.setStopCoordinateX(stopCoordinateX);
+				imageModel.setStopCoordinateY(stopCoordinateY);
 				imageList.add(imageModel);				
 				counter++;
 
@@ -137,22 +199,58 @@ public class FormServlet extends HttpServlet {
 		}
 
 		frame.setImageList(imageList);
-		String[] bannerTextArray;
-		bannerTextArray = request.getParameterValues("banner_text[]");
+
+		System.out.print("Banner Array Size : " + bannerTextArray.length);
 
 
 		List<TextModel> bannerTextList = new ArrayList<>();
 		for(counter = 0; counter < bannerTextArray.length; counter++) {
 			TextModel bannerText = new TextModel();
 
-			float textOnTime = Float.parseFloat(request.getParameter("text_start_time[" + counter + "]")!=null ? request.getParameter("text_start_time[" + counter + "]"):"0");
-			float textOffTime = Float.parseFloat(request.getParameter("text_end_time[" + counter + "]")!=null?request.getParameter("text_end_time[" + counter + "]"):"1");
-
+			String onTime = textStartTimings[counter];
+			String offTime = textStopTimings[counter];
+			float textOnTime = 0, textOffTime = 0;
+			if(onTime.trim().length() > 0) {
+				textOnTime = Float.parseFloat(onTime);
+			}
+			if(offTime.trim().length() > 0) {
+				textOffTime = Float.parseFloat(offTime);
+			}
+			
+			String startCoordinates = textStartCoordinates[counter];
+			String stopCoordinates = textStopCoordinates[counter];
+			String[] startCoordinatesArray, stopCoordinatesArray;
+			float startCoordinateX = 0, startCoordinateY = 0, stopCoordinateX = 0, stopCoordinateY = 0;
+			//check if start coordinate string is not empty and must contains a "," 
+			//if((startCoordinates.trim().length() > 0) && (StringUtils.countMatches(startCoordinates, ",") == 1)) {
+			if((startCoordinates.trim().length() > 0)) {
+				startCoordinatesArray = startCoordinates.split(",");
+				if(startCoordinatesArray[0].length() > 0) {
+					startCoordinateX = Float.parseFloat(startCoordinatesArray[0]);
+				}
+				if(startCoordinatesArray[1].length() > 0) {
+					startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
+				}
+			}
+			//check if start coordinate string is not empty and must contains a "," 
+			//if((stopCoordinates.trim().length() > 0) && (StringUtils.countMatches(stopCoordinates, ",") == 1)) {
+			if((stopCoordinates.trim().length() > 0)) {
+				stopCoordinatesArray = stopCoordinates.split(",");
+				if(stopCoordinatesArray[0].length() > 0) {
+					stopCoordinateX = Float.parseFloat(stopCoordinatesArray[0]);
+				}
+				if(stopCoordinatesArray[1].length() > 0) {
+					stopCoordinateY = Float.parseFloat(stopCoordinatesArray[1]);
+				}
+			}
 			bannerText.setText(bannerTextArray[counter]);
 			bannerText.setOnTime(textOnTime);
 			bannerText.setOffTime(textOffTime);
+			bannerText.setSartCoordinateX(startCoordinateX);
+			bannerText.setSartCoordinateY(startCoordinateY);
+			bannerText.setStopCoordinateX(stopCoordinateX);
+			bannerText.setStopCoordinateY(stopCoordinateY);
 			bannerTextList.add(bannerText);
-			counter++;
 		}
 		frame.setTextList(bannerTextList);
 

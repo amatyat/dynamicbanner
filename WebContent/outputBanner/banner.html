@@ -1,18 +1,68 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head><title>HTML 5 Banner</title></head><style type="">.wrapper{
-    width: 800px;
+    width: 500px;
     height: 500px;
-    background: #f0fab7;
+    background: #123456;
     position: relative;
     cursor: pointer;
 }
-.child-first{
+.child-first-1{
     width: 100px;
     height: 100px;
     background: #89fe76;
     position: absolute;
-	 background-image: url('outputBanner/images/banneruser/My Invitation.jpeg')}</style><body><div class="wrapper" onclick="window.location='https://www.google.com/'" target="_blank"><div class="child-first">Daiwik</div></div><script type="" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script><script type="">$(document).ready(function(){
-	$('.child-first').animate({left:"250px"}, "slow")
-    					.animate({top:"250px"}, "slow")
-    					.animate({left:"300px"}, "slow")
-    					.animate({top:"0px"}, "slow");
-});</script></body></html>
+	 background-image: url('images/background.png')}
+.child-second-1{
+    width: 100px;
+    height: 100px;
+    background: #FFC0CB;
+    position: absolute;
+}</style><style type="">.wrapper{
+    width: 500px;
+    height: 500px;
+    background: #123456;
+    position: relative;
+    cursor: pointer;
+}
+.child-first-1{
+    width: 100px;
+    height: 100px;
+    background: #89fe76;
+    position: absolute;
+	 background-image: url('images/background.png')}
+.child-second-1{
+    width: 100px;
+    height: 100px;
+    background: #FFC0CB;
+    position: absolute;
+}.child-first-2{
+    width: 100px;
+    height: 100px;
+    background: #89fe76;
+    position: absolute;
+	 background-image: url('images/payment_success.png')}
+.child-second-2{
+    width: 100px;
+    height: 100px;
+    background: #FFC0CB;
+    position: absolute;
+}</style><body><div class="wrapper" onclick="window.location='https://www.google.com/'" target="_blank"><div class="child-first-1" id="child-first-1">5.07.0</div><div class="child-second-1" id="child-second-1"></div><div class="child-first-2" id="child-first-2">5.04.0</div><div class="child-second-2" id="child-second-2"></div></div><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script><script type="text/javascript">var timeLineFirst1 = new TimelineLite();
+var timeLineSecond1 = new TimelineLite();
+var childDivFirst1 = document.getElementById("child-first-1");
+timeLineFirst1.set(childDivFirst1, {x: 300.0, y: 25.0});
+timeLineFirst1.to(childDivFirst1, 2.0, {x: 300.0, y: 300.0}, 5.0)
+			.to(childDivFirst1, 2, {width: 200, height: 200})
+			.to(childDivFirst1, 2, {css:{borderRadius: "50%"}})
+			.to(childDivFirst1, 2, {width: 100, height: 100});
+var childDivSecond1 = document.getElementById("child-second-1");
+timeLineSecond1.set(childDivSecond1, {x: 300.0, y: 300.0});
+timeLineSecond1.to(childDivSecond1, 4.0, {x: 25.0, y: 40.0}, 2.0);var timeLineFirst2 = new TimelineLite();
+var timeLineSecond2 = new TimelineLite();
+var childDivFirst2 = document.getElementById("child-first-2");
+timeLineFirst2.set(childDivFirst2, {x: 200.0, y: 200.0});
+timeLineFirst2.to(childDivFirst2, -1.0, {x: 25.0, y: 300.0}, 5.0)
+			.to(childDivFirst2, 2, {width: 200, height: 200})
+			.to(childDivFirst2, 2, {css:{borderRadius: "50%"}})
+			.to(childDivFirst2, 2, {width: 100, height: 100});
+var childDivSecond2 = document.getElementById("child-second-2");
+timeLineSecond2.set(childDivSecond2, {x: 150.0, y: 150.0});
+timeLineSecond2.to(childDivSecond2, 5.0, {x: 400.0, y: 400.0}, 2.0);</script></body></html>
