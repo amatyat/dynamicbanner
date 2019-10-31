@@ -62,5 +62,10 @@ public class BannerModel {
 	public void setFoldername(String foldername) {
 		this.foldername = foldername;
 	}
+	
+	
+	public String toString() {
+		return "Frame Size:"+this.frames.size();
+	}
 
 }

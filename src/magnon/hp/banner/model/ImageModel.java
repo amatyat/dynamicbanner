@@ -67,5 +67,8 @@ public class ImageModel {
 		this.stopCoordinateY = stopCoordinateY;
 	}
 	
+	public String toString() {
+		return "imagePath :"+this.imagePath;
+	}
 
 }

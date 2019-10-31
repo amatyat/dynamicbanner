@@ -1,14 +1,21 @@
 package magnon.hp.banner.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.io.File;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -20,11 +27,13 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import magnon.hp.banner.db.JDBCConncetionProvider;
-import magnon.hp.banner.model.BannerModel;
-import magnon.hp.banner.model.FrameModel;
-import magnon.hp.banner.model.ImageModel;
-import magnon.hp.banner.model.TextModel;
-import magnon.hp.banner.util.ZipUtil;
+import magnon.hp.banner.model.*;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  * Servlet implementation class FormServlet
@@ -59,268 +68,385 @@ public class FormServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		BannerModel bannerModel = new BannerModel();
+		List<FrameModel> frameList = new ArrayList<>();
 		HttpSession session = request.getSession();
 		bannerModel.setUsername(session.getAttribute("UserName").toString());
 		Date bannerDate = new Date(new java.util.Date().getTime());
-
 		long bannerTime = new java.util.Date().getTime();
 
 		bannerModel.setFoldername(bannerDate+"_"+bannerTime);
 		// gets absolute path of the web application
-		String savePath =  SAVE_DIR+"\\"+bannerModel.getUsername();
+		String savePath =  SAVE_DIR+File.separator+bannerModel.getUsername();
 
-		String canvas_width = request.getParameter("canvas_width");
-		String canvas_height = request.getParameter("canvas_height");
+		File saveDir = new File(savePath);
 
-		String colorpicker = request.getParameter("colorpicker");
-
-		String hpl_link = request.getParameter("hpl_link");
-		String target = request.getParameter("hpl_target");
-
-		List<FrameModel> frameList = new ArrayList<>();
-		
-
-		//frame image start and stop time in sec
-		String[] imageStartTimings = request.getParameterValues("image_start_time[]");
-		String[] imageStopTimings = request.getParameterValues("image_stop_time[]");
-		
-		//frame image start and stop coordinates
-		String[] imageStartCoordinates = request.getParameterValues("image_start_xy[]");
-		String[] imageStopCoordinates = request.getParameterValues("image_stop_xy[]");
-		
-		//frame text array
-		String[] bannerTextArray;
-		bannerTextArray = request.getParameterValues("banner_text[]");
-		
-		
-		//frame text start and stop time in sec
-		String[] textStartTimings = request.getParameterValues("text_start_time[]");
-		String[] textStopTimings = request.getParameterValues("text_end_time[]");
-		
-		//frame image start and stop coordinates
-		String[] textStartCoordinates = request.getParameterValues("text_start_xy[]");
-		String[] textStopCoordinates = request.getParameterValues("text_stop_xy[]");
-
-
-		bannerModel.setFrames(frameList);
-
-		bannerModel.setCanvas_height(canvas_height);
-		bannerModel.setCanvas_width(canvas_width);
-		bannerModel.setColorpicker(colorpicker);
-		bannerModel.setHpl_link(hpl_link);
-		bannerModel.setTarget(target);
-
-
-		// creates the save directory if it does not exists
-		File fileSaveDir = new File(savePath); 
-		if (!fileSaveDir.exists()) {
-			fileSaveDir.mkdir(); 
+		if(!saveDir.exists()) {
+			saveDir.mkdir();
 		}
+
+		File folderDir = new File(savePath + File.separator +bannerModel.getFoldername());
+
+		if(!folderDir.exists()) {
+			folderDir.mkdir();
+		}
+
+		File imagefolderDir = new File(folderDir.getPath()+File.separator+"images");
+
+		if(!imagefolderDir.exists()) {
+			imagefolderDir.mkdir();
+		}
+
 		FrameModel frame = new FrameModel();
 		List<ImageModel> imageList = new ArrayList<>();
-		//String banner_text = "";
-		int counter = 0;
-		for (Part part : request.getParts()) {
-
-			String fileName = extractFileName(part);
-			// refines the fileName in case it is an absolute path
-			fileName = new File(fileName.trim()).getName();
-			if(!fileName.isEmpty()) {
-				ImageModel imageModel = new ImageModel();
-				
-				File filesSaveDir = new File(savePath);
-				System.out.println("save"+savePath);
-				if (!filesSaveDir.exists()) {
-					System.out.println("no exist"+savePath);
-					filesSaveDir.mkdir(); 
-				}
-				File userSaveDir = new File(savePath+"\\"+bannerModel.getFoldername());
-				System.out.println("save"+userSaveDir);
-				if (!userSaveDir.exists()) {
-					System.out.println("no exist"+userSaveDir);
-					userSaveDir.mkdir(); 
-				}
-			
-				File filesSaveImageDir = new File(savePath+"\\"+bannerModel.getFoldername()+"\\images");
-				if (!filesSaveImageDir.exists()) {
-					System.out.println("no exist 2"+filesSaveImageDir.getAbsolutePath());
-					filesSaveImageDir.mkdir(); 
-				}
-				part.write(savePath+"\\"+bannerModel.getFoldername()+File.separator+"images" + File.separator + fileName);
-				
-				String onTime = imageStartTimings[counter];
-				String offTime = imageStopTimings[counter];
-				float imageOnTime = 0, imageOffTime = 0;
-				if(onTime.trim().length() > 0) {
-					imageOnTime = Float.parseFloat(onTime);
-				}
-				if(offTime.trim().length() > 0) {
-					imageOffTime = Float.parseFloat(offTime);
-				}
-				
-				String startCoordinates = imageStartCoordinates[counter];
-				String stopCoordinates = imageStopCoordinates[counter];
-				String[] startCoordinatesArray, stopCoordinatesArray;
-				float startCoordinateX = 0, startCoordinateY = 0, stopCoordinateX = 0, stopCoordinateY = 0;
-				//check if start coordinate string is not empty and must contains a "," 
-				//if((startCoordinates.trim().length() > 0) && (StringUtils.countMatches(startCoordinates, ",") == 1)) {
-				if((startCoordinates.trim().length() > 0)) {
-					startCoordinatesArray = startCoordinates.split(",");
-					if(startCoordinatesArray[0].length() > 0) {
-						startCoordinateX = Float.parseFloat(startCoordinatesArray[0]);
-					}
-					if(startCoordinatesArray[1].length() > 0) {
-						startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
-					}
-				}
-				//check if start coordinate string is not empty and must contains a "," 
-				//if((stopCoordinates.trim().length() > 0) && (StringUtils.countMatches(stopCoordinates, ",") == 1)) {
-				if((stopCoordinates.trim().length() > 0)) {
-					stopCoordinatesArray = stopCoordinates.split(",");
-					if(stopCoordinatesArray[0].length() > 0) {
-						stopCoordinateX = Float.parseFloat(stopCoordinatesArray[0]);
-					}
-					if(stopCoordinatesArray[1].length() > 0) {
-						stopCoordinateY = Float.parseFloat(stopCoordinatesArray[1]);
-					}
-				}
-				
-				imageModel.setImagePath(fileName);
-				imageModel.setOnTime(imageOnTime);
-				imageModel.setOffTime(imageOffTime);
-				imageModel.setSartCoordinateX(startCoordinateX);
-				imageModel.setSartCoordinateY(startCoordinateY);
-				imageModel.setStopCoordinateX(stopCoordinateX);
-				imageModel.setStopCoordinateY(stopCoordinateY);
-				imageList.add(imageModel);				
-				counter++;
-
-			}
-
-		}
-
-		frame.setImageList(imageList);
-
-		System.out.print("Banner Array Size : " + bannerTextArray.length);
-
-
 		List<TextModel> bannerTextList = new ArrayList<>();
-		for(counter = 0; counter < bannerTextArray.length; counter++) {
-			TextModel bannerText = new TextModel();
 
-			String onTime = textStartTimings[counter];
-			String offTime = textStopTimings[counter];
-			float textOnTime = 0, textOffTime = 0;
-			if(onTime.trim().length() > 0) {
-				textOnTime = Float.parseFloat(onTime);
-			}
-			if(offTime.trim().length() > 0) {
-				textOffTime = Float.parseFloat(offTime);
-			}
-			
-			String startCoordinates = textStartCoordinates[counter];
-			String stopCoordinates = textStopCoordinates[counter];
-			String[] startCoordinatesArray, stopCoordinatesArray;
-			float startCoordinateX = 0, startCoordinateY = 0, stopCoordinateX = 0, stopCoordinateY = 0;
-			//check if start coordinate string is not empty and must contains a "," 
-			//if((startCoordinates.trim().length() > 0) && (StringUtils.countMatches(startCoordinates, ",") == 1)) {
-			if((startCoordinates.trim().length() > 0)) {
-				startCoordinatesArray = startCoordinates.split(",");
-				if(startCoordinatesArray[0].length() > 0) {
-					startCoordinateX = Float.parseFloat(startCoordinatesArray[0]);
-				}
-				if(startCoordinatesArray[1].length() > 0) {
-					startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
-				}
-			}
-			//check if start coordinate string is not empty and must contains a "," 
-			//if((stopCoordinates.trim().length() > 0) && (StringUtils.countMatches(stopCoordinates, ",") == 1)) {
-			if((stopCoordinates.trim().length() > 0)) {
-				stopCoordinatesArray = stopCoordinates.split(",");
-				if(stopCoordinatesArray[0].length() > 0) {
-					stopCoordinateX = Float.parseFloat(stopCoordinatesArray[0]);
-				}
-				if(stopCoordinatesArray[1].length() > 0) {
-					stopCoordinateY = Float.parseFloat(stopCoordinatesArray[1]);
-				}
-			}
-			bannerText.setText(bannerTextArray[counter]);
-			bannerText.setOnTime(textOnTime);
-			bannerText.setOffTime(textOffTime);
-			bannerText.setSartCoordinateX(startCoordinateX);
-			bannerText.setSartCoordinateY(startCoordinateY);
-			bannerText.setStopCoordinateX(stopCoordinateX);
-			bannerText.setStopCoordinateY(stopCoordinateY);
-			bannerTextList.add(bannerText);
+		//	bannerModel.setFrames(frameList);
+
+		// gets absolute path of the web application
+		String appPath = request.getServletContext().getRealPath(""); // constructs	pat of the directory to save uploaded file 
+
+		String canvas_width = null, canvas_height = null, colorpicker, hpl_link, target = null;
+
+		//total frames
+		int totalFrameCount = 0;
+
+
+
+		//frame text array
+		ArrayList<String[]> bannerTextArray = new ArrayList<String[]>();
+		for(int frameCount = 1; frameCount <= totalFrameCount; frameCount++) {
+			bannerTextArray.add(request.getParameterValues("banner_text[frame_" + frameCount + "][]"));
 		}
-		frame.setTextList(bannerTextList);
-
-		request.setAttribute("message", "Upload has been done successfully!");
-
-		frameList.add(frame);
-		bannerModel.setFrames(frameList);
-		System.out.println("Canvas Width is: " + canvas_width);
-		System.out.println("Canvas Height is: " + canvas_height);
-
-		PrintWriter writer = response.getWriter();
-
-		String htmlRespone = "<html><h3>";
-		htmlRespone += "user is: " + bannerModel.getUsername()+ "<br/>";	
-		htmlRespone += "canvas_width is a: " + canvas_width + "<br/>";		
-		htmlRespone += "canvas_height is: " + canvas_height + "<br/>";	
-		htmlRespone += "Path: " + savePath + "<br/>";
-		htmlRespone += "hpl_link is: " + frameList.get(0).getImageList().get(0).getImagePath() + "<br/>";
-		htmlRespone += "target is: " + target + "<br/>";
 
 
-		htmlRespone += "Download Banners from below: <br/>";
-		System.out.println(bannerModel.getUsername());
-		
-		htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+bannerModel.getFoldername()+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+bannerModel.getFoldername()+"</a>";
 
-		JDBCConncetionProvider jConncetionProvider = new JDBCConncetionProvider();
-		Connection con = jConncetionProvider.connect();
+		//frame text start and stop time in sec
+		ArrayList<String[]> textStartTimings = new ArrayList<String[]>();
+		ArrayList<String[]> textStopTimings = new ArrayList<String[]>();
+		for(int frameCount = 1; frameCount <= totalFrameCount; frameCount++) {
+			textStartTimings.add(request.getParameterValues("text_start_time[frame_" + frameCount + "][]"));
+		}
+		for(int frameCount = 1; frameCount <= totalFrameCount; frameCount++) {
+			textStopTimings.add(request.getParameterValues("text_end_time[frame_" + frameCount + "][]"));
+		}
+
+		//frame image start and stop coordinates
+		ArrayList<String[]> textStartCoordinates = new ArrayList<String[]>();
+		ArrayList<String[]> textStopCoordinates = new ArrayList<String[]>();
+		for(int frameCount = 1; frameCount <= totalFrameCount; frameCount++) {
+			textStartCoordinates.add(request.getParameterValues("text_start_xy[frame_" + frameCount + "][]"));
+		}
+		for(int frameCount = 1; frameCount <= totalFrameCount; frameCount++) {
+			textStopCoordinates.add(request.getParameterValues("text_stop_xy[frame_" + frameCount + "][]"));
+		}
+
+		/////////////////////////
+
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+
+		//out.println("Hello<br/>");
+
+		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
+		if (!isMultipartContent) {
+			//out.println("You are not trying to upload<br/>");
+			return;
+		}
+		//out.println("You are trying to upload<br/>");
+
+		FileItemFactory factory = new DiskFileItemFactory();
+		ServletFileUpload upload = new ServletFileUpload(factory);
 		try {
+			List<FileItem> fields = upload.parseRequest(request);
+			//out.println("Number of fields: " + fields.size() + "<br/><br/>");
+			Iterator<FileItem> it = fields.iterator();
+			if (!it.hasNext()) {
+				System.out.println("No fields found");
+				return;
+			}
+			//out.println("<table border=\"1\">");
 
-			Statement statement = con.createStatement();
-			String queryString = "select * from banner_details where name='"+bannerModel.getUsername()+"'";
-			System.out.println(queryString);
-			ResultSet rs = statement.executeQuery(queryString);
-			while (rs.next()) {
-				System.out.print("Folder: "+rs.getString(3));
 
-				htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+rs.getString(3)+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+rs.getString(3)+"</a>";
+			ImageModel imageModel = null;
+			TextModel bannerText = null;
+			int frameCount = 1;
+			int imageCount =0;
+			int imagePrevCount =0;
+			while (it.hasNext()) {
+				String onTime = null, offTime = null;
+				String startCoordinates = null, stopCoordinates = null;
+				float imageOnTime = 0;
+				float imageOffTime = 0;
+				float textOnTime = 0;
+				float textOffTime = 0;
+
+				FileItem fileItem = it.next();
+				boolean isFormField = fileItem.isFormField();
+				if (isFormField) {
+
+					if((fileItem.getFieldName()).equals("total_frame_count")) {
+						totalFrameCount = Integer.parseInt(fileItem.getString());
+					}
+					if((fileItem.getFieldName()).equals("canvas_width")) {
+						canvas_width = fileItem.getString();
+						bannerModel.setCanvas_width(canvas_width);
+					}
+					if((fileItem.getFieldName()).equals("canvas_height")) {
+						canvas_height = fileItem.getString();
+						bannerModel.setCanvas_height(canvas_height);
+					}
+					if((fileItem.getFieldName()).equals("colorpicker")) {
+						colorpicker = fileItem.getString();
+						bannerModel.setColorpicker(colorpicker);
+					}
+					if((fileItem.getFieldName()).equals("hpl_link")) {
+						hpl_link = fileItem.getString();
+						bannerModel.setHpl_link(hpl_link);
+					}
+					if((fileItem.getFieldName()).equals("hpl_target")) {
+						target = fileItem.getString();
+						bannerModel.setTarget(target);
+					}
+					if((fileItem.getFieldName()).equals("frame_start[]")) {
+						frameCount = Integer.parseInt(fileItem.getString());
+						frame = new FrameModel();
+
+						imageList = new ArrayList<ImageModel>();
+						bannerTextList = new ArrayList<TextModel>();
+						System.out.println("start");
+					}
+					if((fileItem.getFieldName()).equals("frame_end[]")) {
+
+
+						/*	out.println(imageList.size()+"<br/>"+ frameCount +"*************");
+						for(int i=0; i<imageList.size();i++) {
+							out.println(imageList.get(i).getImagePath() + "&&&&&&&&&&& "+imageList.get(i).getOffTime());
+						}
+
+						out.println(bannerTextList.size()+"<br/>");
+						for(int i=0; i<bannerTextList.size();i++) {
+							out.println(bannerTextList.get(i).getText() + "&&&&$$$$$$$$$$$$$$$$$$$$&&&& "+bannerTextList.get(i).getOffTime());
+						}*/
+						//set image list to frame
+						frame.setImageList(imageList);
+
+						//set text list to frame
+						frame.setTextList(bannerTextList);
+
+						frameList.add(frame);
+						System.out.println("end"+imageList.get(0).getImagePath());
+					}
+
+
+					if((fileItem.getFieldName()).equals("image_start_time[frame_" + frameCount + "][]")) {
+						onTime = fileItem.getString();
+
+						if(onTime.trim().length() > 0) {
+							imageOnTime = Float.parseFloat(onTime);
+						}
+						imageModel.setOnTime(imageOnTime);
+					}
+					if((fileItem.getFieldName()).equals("image_stop_time[frame_" + frameCount + "][]")) {
+						offTime = fileItem.getString();
+
+						if(offTime.trim().length() > 0) {
+							imageOffTime = Float.parseFloat(offTime);
+						}
+						imageModel.setOffTime(imageOffTime);
+					}
+					if((fileItem.getFieldName()).equals("image_start_xy[frame_" + frameCount + "][]")) {
+						startCoordinates = fileItem.getString();
+
+						String[] startCoordinatesArray;
+						float startCoordinateX = 0, startCoordinateY = 0;
+						//check if start coordinate string is not empty and must contains a ","
+						if((startCoordinates.trim().length() > 0)) {
+							startCoordinatesArray = startCoordinates.split(",");
+							if(startCoordinatesArray[0].length() > 0) {
+								startCoordinateX = Float.parseFloat(startCoordinatesArray[0]);
+							}
+							if(startCoordinatesArray[1].length() > 0) {
+								startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
+							}
+						}
+						imageModel.setSartCoordinateX(startCoordinateX);
+						imageModel.setSartCoordinateY(startCoordinateY);
+					}
+					if((fileItem.getFieldName()).equals("image_stop_xy[frame_" + frameCount + "][]")) {
+						stopCoordinates = fileItem.getString();
+
+						String[] stopCoordinatesArray;
+						float stopCoordinateX = 0, stopCoordinateY = 0;
+						//check if start coordinate string is not empty and must contains a ","
+						if((stopCoordinates.trim().length() > 0)) {
+							stopCoordinatesArray = stopCoordinates.split(",");
+							if(stopCoordinatesArray[0].length() > 0) {
+								stopCoordinateX = Float.parseFloat(stopCoordinatesArray[0]);
+							}
+							if(stopCoordinatesArray[1].length() > 0) {
+								stopCoordinateY = Float.parseFloat(stopCoordinatesArray[1]);
+							}
+						}
+						imageModel.setStopCoordinateX(stopCoordinateX);
+						imageModel.setStopCoordinateY(stopCoordinateY);
+					}
+					if((fileItem.getFieldName()).equals("image_effect[frame_" + frameCount + "][]")) {
+						imageList.add(imageModel);
+					}
+
+					if((fileItem.getFieldName()).equals("banner_text[frame_" + frameCount + "][]")) {
+
+						bannerText = new TextModel();
+						bannerText.setText(fileItem.getString());
+					}
+					if((fileItem.getFieldName()).equals("text_start_time[frame_" + frameCount + "][]")) {
+						onTime = fileItem.getString();
+
+						if(onTime.trim().length() > 0) {
+							textOnTime = Float.parseFloat(onTime);
+						}
+						bannerText.setOnTime(textOnTime);
+
+					}
+					if((fileItem.getFieldName()).equals("text_end_time[frame_" + frameCount + "][]")) {
+						offTime = fileItem.getString();
+
+						if(offTime.trim().length() > 0) {
+							textOffTime = Float.parseFloat(offTime);
+						}
+
+						bannerText.setOffTime(textOffTime);
+					}
+					if((fileItem.getFieldName()).equals("text_start_xy[frame_" + frameCount + "][]")) {
+						startCoordinates = fileItem.getString();
+
+						String[] startCoordinatesArray;
+						float startCoordinateX = 0, startCoordinateY = 0;
+						//check if start coordinate string is not empty and must contains a ","
+						if((startCoordinates.trim().length() > 0)) {
+							startCoordinatesArray = startCoordinates.split(",");
+							if(startCoordinatesArray[0].length() > 0) {
+								startCoordinateX = Float.parseFloat(startCoordinatesArray[0]);
+							}
+							if(startCoordinatesArray[1].length() > 0) {
+								startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
+							}
+						}
+						bannerText.setSartCoordinateX(startCoordinateX);
+						bannerText.setSartCoordinateY(startCoordinateY);
+					}
+					if((fileItem.getFieldName()).equals("text_stop_xy[frame_" + frameCount + "][]")) {
+						stopCoordinates = fileItem.getString();
+
+						String[] stopCoordinatesArray;
+						float stopCoordinateX = 0, stopCoordinateY = 0;
+						//check if start coordinate string is not empty and must contains a "," 
+						if((stopCoordinates.trim().length() > 0)) {
+							stopCoordinatesArray = stopCoordinates.split(",");
+							if(stopCoordinatesArray[0].length() > 0) {
+								stopCoordinateX = Float.parseFloat(stopCoordinatesArray[0]);
+							}
+							if(stopCoordinatesArray[1].length() > 0) {
+								stopCoordinateY = Float.parseFloat(stopCoordinatesArray[1]);
+							}
+						}
+						bannerText.setStopCoordinateX(stopCoordinateX);
+						bannerText.setStopCoordinateY(stopCoordinateY);
+					}
+					if((fileItem.getFieldName()).equals("text_effect[frame_" + frameCount + "][]")) {
+
+						bannerTextList.add(bannerText);
+					}
+
+
+				} else {
+
+					//file upload code starts
+					String fileName = new File(fileItem.getName()).getName();
+
+					String filePath = imagefolderDir.getPath()+File.separator+ fileName;
+					File storeFile = new File(filePath);
+					System.out.println(fileName+"filePath :::::"+filePath);
+					// saves the file on disk
+					fileItem.write(storeFile);
+					//file upload code ends
+
+					imageCount++;
+
+
+					imageModel = new ImageModel();
+					imageModel.setImagePath(fileName);
+
+				}
 
 			}
 
+			bannerModel.setFrames(frameList);
+
+			PrintWriter writer = response.getWriter();
+
+			System.out.println("Size ::::::::::::::"+bannerModel.getFrames().size());
+
+			for(FrameModel framemodel: bannerModel.getFrames()) {
+				System.out.println("aaaaaaaa Frame" +framemodel);
+				System.out.println(framemodel);
+
+				System.out.println("Image");
+				for(int im = 0; im<framemodel.getImageList().size();im++) {
+					System.out.println(framemodel.getImageList().get(im).getImagePath());
+				}
+
+				System.out.println("Text");
+				for(int im = 0; im<framemodel.getTextList().size();im++) {
+					System.out.println(framemodel.getTextList().get(im).getText());
+				}
+
+			}
+
+			String htmlRespone = "";
+			htmlRespone += BannerCreator.createHTML(bannerModel);
+
+			htmlRespone += "user is: " + bannerModel.getUsername()+ "<br/>";	
+			htmlRespone += "canvas_width is a: " + canvas_width + "<br/>";		
+			htmlRespone += "canvas_height is: " + canvas_height + "<br/>";	
+			htmlRespone += "Path: " + savePath + "<br/>";
+			htmlRespone += "hpl_link is: " + frameList.get(0).getImageList().get(0).getImagePath() + "<br/>";
+			htmlRespone += "target is: " + target + "<br/>";
+
+
+			htmlRespone += "Download Banners from below: <br/>";
+			System.out.println(bannerModel.getUsername());
+
+			//htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+bannerModel.getFoldername()+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+bannerModel.getFoldername()+"</a>";
+
+			JDBCConncetionProvider jConncetionProvider = new JDBCConncetionProvider();
+			Connection con = jConncetionProvider.connect();
+			try {
+
+				Statement statement = con.createStatement();
+				String queryString = "select * from banner_details where name='"+bannerModel.getUsername()+"'";
+				System.out.println(queryString);
+				ResultSet rs = statement.executeQuery(queryString);
+				while (rs.next()) {
+					System.out.print("Folder: "+rs.getString(3));
+
+					htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+rs.getString(3)+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+rs.getString(3)+"</a>";
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+
+			// return response
+			writer.println(htmlRespone);	
+
+		} catch (FileUploadException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
-		htmlRespone += "</h3></html>";
-
-		htmlRespone+=BannerCreator.createHTML(bannerModel);
-
-		// return response
-		writer.println(htmlRespone);	
-
 	}
-
-	/**
-	 * Extracts file name from HTTP header content-disposition
-	 */
-	private String extractFileName(Part part) {
-		String contentDisp = part.getHeader("content-disposition");
-		String[] items = contentDisp.split(";");
-		for (String s : items) {
-			if (s.trim().startsWith("filename")) {
-				return s.substring(s.indexOf("=") + 2, s.length()-1);
-			}
-		}
-		return "";
-	}
-
-
 
 }

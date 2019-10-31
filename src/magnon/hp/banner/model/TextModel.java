@@ -66,5 +66,7 @@ public class TextModel {
 	public void setStopCoordinateY(float stopCoordinateY) {
 		this.stopCoordinateY = stopCoordinateY;
 	}
-	
+	public String toString() {
+		return "text :"+this.text;
+	}
 }

@@ -72,59 +72,74 @@
 				</div>
 			</div>
 		</div>
-		<div class="lower-form-wrapper">
-			<div class="add-more">
-				<a id="add-more" href="javascrfipt:void(0);" title="Add More" class="add-more">Add More Elements(Image/Text)</a>
+		
+		<div class="frame-wrapper">
+			<div class="add-more-wrapper">
+				<a id="add-more-frame" href="javascrfipt:void(0);" title="Add Frames" class="add-more">Add Frames</a>
+				<div class="clear"></div>
 			</div>
-			<div class="inner-wrapper inner-wrapper-top">
-				<div class="field-container banner-image">
-					<label class="lebel-align">Image : </label>
-					<div class="fields-wrapper">
-						<label for="banner-first-image-1">OFF</label>
-						<input type="radio" name="banner_image[]" id="banner-first-image-1" value="0" class="image-file radio">
-						<label for="banner-second-image-1">ON</label>
-						<input type="radio" name="banner_image[]" id="banner-second-image-1" value="1" class="image-file radio">
-						<input type="file" name="file_name[]" style="display: none;" class="image-field">
-						<input type="text" name="image_start_time[]" style="display: none;" placeholder="Start Time" class="time-field image-field">
-						<input type="text" name="image_stop_time[]" style="display: none;" placeholder="End Time" class="time-field image-field">
-						<input type="text" name="image_start_xy[]" style="display: none;" placeholder="Start X,Y" class="time-field image-field">
-						<input type="text" name="image_stop_xy[]" style="display: none;" placeholder="Stop X,Y" class="time-field image-field">
-						<select id="image-effect-1" name="image_effect[]" style="display: none;" class="field select-effect">
-							<option value="0">Select Effect</option>
-							<option value="_blank">_blank</option>
-							<option value="_self">_self</option>
-							<option value="_parent">_parent</option>
-							<option value="_top">_top</option>
-						</select>
+			<div class="frame-inner-wrapper">
+				<h2>Frame 1</h2>
+				<div class="lower-form-wrapper">
+					<input type="hidden" id="frame_start" name="frame_start[]" value="1" class="frame-count" />
+					<div class="add-more-wrapper">
+						<a id="add-more" href="javascrfipt:void(0);" title="Add More" class="add-more">Add More Elements</a>
+						
 					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="field-container banner-image">
-					<label class="lebel-align">Text : </label>
-					<div class="fields-wrapper">
-						<label for="is-first-text-1">OFF</label>
-						<input type="radio" name="is_text[]" id="is-first-text-1" value="0" class="banner-text radio">
-						<label for="is-second-text-1">ON</label>
-						<input type="radio" name="is_text[]" id="is-second-text-1" value="1" class="banner-text radio">
-						<input type="text" name="banner_text[]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
-						<input type="text" name="text_start_time[]" placeholder="Start Time" class="time-field" style="display: none;"/>
-						<input type="text" name="text_end_time[]" placeholder="End Time" class="time-field" style="display: none;"/>
-						<input type="text" name="text_start_xy[]" placeholder="Start X,Y" class="time-field" style="display: none;"/>
-						<input type="text" name="text_stop_xy[]" placeholder="Stop X,Y" class="time-field" style="display: none;"/>
-						<select id="image-effect-1" name="image_effect[]" style="display: none;" class="field select-text-effect">
-							<option value="0">Select Effect</option>
-							<option value="_blank">_blank</option>
-							<option value="_self">_self</option>
-							<option value="_parent">_parent</option>
-							<option value="_top">_top</option>
-						</select>
+					<div class="inner-wrapper inner-wrapper-top">
+						<div class="field-container banner-image">
+							<label class="lebel-align">Image : </label>
+							<div class="fields-wrapper">
+								<label for="frame_1-banner-first-image-1">OFF</label>
+								<input type="radio" name="banner_image[frame_1][]" id="frame_1-banner-first-image-1" value="0" class="image-file radio">
+								<label for="frame_1-banner-second-image-1">ON</label>
+								<input type="radio" name="banner_image[frame_1][]" id="frame_1-banner-second-image-1" value="1" class="image-file radio">
+								<input type="file" name="file_name[frame_1][]" style="display: none;" class="image-field">
+								<input type="text" name="image_start_time[frame_1][]" style="display: none;" placeholder="Start Time" class="time-field image-field">
+								<input type="text" name="image_stop_time[frame_1][]" style="display: none;" placeholder="End Time" class="time-field image-field">
+								<input type="text" name="image_start_xy[frame_1][]" style="display: none;" placeholder="Start X,Y" class="time-field image-field">
+								<input type="text" name="image_stop_xy[frame_1][]" style="display: none;" placeholder="Stop X,Y" class="time-field image-field">
+								<select id="image-effect-1" name="image_effect[frame_1][]" style="display: none;" class="field select-effect">
+									<option value="0">Select Effect</option>
+									<option value="_blank">_blank</option>
+									<option value="_self">_self</option>
+									<option value="_parent">_parent</option>
+									<option value="_top">_top</option>
+								</select>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="field-container banner-image">
+							<label class="lebel-align">Text : </label>
+							<div class="fields-wrapper">
+								<label for="frame_1-is-first-text-1">OFF</label>
+								<input type="radio" name="is_text[frame_1][]" id="frame_1-is-first-text-1" value="0" class="banner-text radio">
+								<label for="frame_1-is-second-text-1">ON</label>
+								<input type="radio" name="is_text[frame_1][]" id="frame_1-is-second-text-1" value="1" class="banner-text radio">
+								<input type="text" name="banner_text[frame_1][]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
+								<input type="text" name="text_start_time[frame_1][]" placeholder="Start Time" class="time-field" style="display: none;"/>
+								<input type="text" name="text_end_time[frame_1][]" placeholder="End Time" class="time-field" style="display: none;"/>
+								<input type="text" name="text_start_xy[frame_1][]" placeholder="Start X,Y" class="time-field" style="display: none;"/>
+								<input type="text" name="text_stop_xy[frame_1][]" placeholder="Stop X,Y" class="time-field" style="display: none;"/>
+								<select id="image-effect-1" name="text_effect[frame_1][]" style="display: none;" class="field select-text-effect">
+									<option value="0">Select Effect</option>
+									<option value="_blank">_blank</option>
+									<option value="_self">_self</option>
+									<option value="_parent">_parent</option>
+									<option value="_top">_top</option>
+								</select>
+							</div>
+							<div class="clear"></div>
+						</div>
 					</div>
-					<div class="clear"></div>
+					<input type="hidden" id="frame_end" name="frame_end[]" value="1" class="frame-count" />
 				</div>
 			</div>
 		</div>
 		 <div class="row">
-	      <input type="submit" value="Submit Frame">
+		 	<input type="hidden" id="total_frame_count" name="total_frame_count" value="1" />
+	     	<input type="submit" value="Submit" class="submit-button">
+	     	<div class="clear"></div>
 	    </div>
 	</form>
 </div>
@@ -171,15 +186,47 @@ $(document).ready(function() {
 		}
 	});
 	
+	var htmlString = "";
 	var counter = 2;
-	$('#add-more').on('click', function(){
-		$('.lower-form-wrapper').append('<div class="inner-wrapper">' + $('.inner-wrapper-top').clone().html().replace(/\-1/g, '-' + counter).replace(/\[1\]/g, '[' + counter + ']') + '</div>');
+	$(document).on('click', '#add-more', function(){
+		var currentFrameCount =$(this).parent().prev().val();
+		htmlString = '<div class="inner-wrapper">' + 
+						$('.inner-wrapper-top').clone().html().replace(/\-1/g, '-' + counter).replace(/\[1\]/g, '[' + counter + ']').replace(/\_1/g, '_' + currentFrameCount) + 
+					'</div>';
+		$(this).closest('.lower-form-wrapper').append(htmlString);
 		counter += 1;
 		
 		$('.radio').checkboxradio({
 	      icon: false
 	    });
-	})
+	});
+	
+	var count = 2;
+	$(document).on('click', '#add-more-frame', function(){
+		htmlString = '<div class="frame-inner-wrapper">'+
+						'<h2>Frame ' + count + '</h2>'+
+						'<div class="lower-form-wrapper">'+
+						'<input type="hidden" id="frame_start" name="frame_start[]" value="' + count + '" class="frame-count" />'+
+							'<div class="add-more-wrapper">'+
+								'<a id="add-more" href="javascrfipt:void(0);" title="Add More" class="add-more">Add More Elements</a>'+
+							'</div>'+
+							'<input type="hidden" name="frame_count[]" value="' + count + '" class="frame-count" />'+
+							'<div class="inner-wrapper">' + 
+								$('.inner-wrapper-top').clone().html().replace(/\_1/g, '_' + count) + 
+							'</div>'+
+						'</div>'+
+						'<input type="hidden" id="frame_end" name="frame_end[]" value="' + count + '" class="frame-count" />'+
+					'</div>';
+		$(this).closest('.frame-wrapper').append(htmlString);
+		$('#total_frame_count').val(count);
+		
+		
+		count += 1;
+		
+		$('.radio').checkboxradio({
+	      icon: false
+	    });
+	});
 });
 </script>
 </body>

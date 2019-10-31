@@ -19,5 +19,8 @@ public class FrameModel {
 		this.textList = textList;
 	}
 	
+	public String toString() {
+		return "imageList Size:"+this.imageList.size()+"textList Size:"+this.textList.size();
+	}
 
 }

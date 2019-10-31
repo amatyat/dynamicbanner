@@ -207,8 +207,8 @@ public class BannerCreator {
 			elementId = "child-second-" + (i + 1 );
 			Div childSecondDiv = divContainerCreator(elementId, cssClass);
 			
-			childFirstDiv.appendText("" + frameImageElementList.get(i).getOnTime() + frameImageElementList.get(i).getOffTime());
-			childSecondDiv.appendText(frameTextElementList.get(i).getText() + " " + frameTextElementList.get(i).getOnTime() + " " + frameTextElementList.get(i).getOffTime());
+			//childFirstDiv.appendText("" + frameImageElementList.get(i).getOnTime() + frameImageElementList.get(i).getOffTime());
+			childSecondDiv.appendText(frameTextElementList.get(i).getText());
 			wrapperDiv.appendChild(childFirstDiv);
 			wrapperDiv.appendChild(childSecondDiv);
 		}
