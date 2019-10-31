@@ -59,12 +59,12 @@ public class BannerCreator {
 	    List<FrameModel> frameList = new ArrayList<>();
 	    frameList = bannerModel.getFrames();
 	    if(!frameList.isEmpty()) {
-		    
-		    //add banner page title
+	    	//add banner page title
 		    Title title = obj.setPageTitle("HTML 5 Banner");
 		    head.appendChild(title);
 		    //set body to html
 		    Body body = new Body();
+		    
 		    //wrapper container of banner
 		    String cssClass = "wrapper";
 		    String id = null;
@@ -130,42 +130,31 @@ public class BannerCreator {
 		    } catch (FileNotFoundException e) {
 		        e.printStackTrace();
 		    }
+			
+		}else {
+			System.out.println("Frame Model Is Empty");
 		}
-	    
+		
+		
+		
 		Connection con = new JDBCConncetionProvider().connect();
 	    
 		String SQL_INSERT = "INSERT INTO banner_details (name, banner_name, created_date) VALUES (?,?,?)";
-
 		// build HTML code
 		try {
-
 			PreparedStatement ps = con.prepareStatement
 					(SQL_INSERT);
 			Date sqlDate = new Date(new java.util.Date().getTime());
-			
+								
 			ps.setString(1, bannerModel.getUsername());
-			ps.setString(2, bannerModel.getFoldername());
+			System.out.println("Frame Model Is Empty");					ps.setString(2, bannerModel.getFoldername());
 			ps.setDate(3, sqlDate);
 			int i = ps.executeUpdate();
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}				
 		
 	    return html.write();
-	}
-	
-	public Div divContainerCreator(String elementId, String cssClass) {
-		Div divContainer = new Div();
-		//set element css class
-		divContainer.setCSSClass(cssClass);
-		//set element id if not null
-		if(elementId != null) {
-			divContainer.setId(elementId);
-		}
-		
-		return divContainer;
 	}
 	
 	public Title setPageTitle(String pageTitle) {
@@ -180,6 +169,18 @@ public class BannerCreator {
 		s.appendChild(new Text(styleString));
 		
 		html.appendChild(s);
+	}
+	
+	public Div divContainerCreator(String elementId, String cssClass) {
+		Div divContainer = new Div();
+		//set element css class
+		divContainer.setCSSClass(cssClass);
+		//set element id if not null
+		if(elementId != null) {
+			divContainer.setId(elementId);
+		}
+		
+		return divContainer;
 	}
 	
 	public Div addHyperlinkToBannerWrapperContainer(BannerModel bannerModel, Div wrapperDiv) {
@@ -207,8 +208,8 @@ public class BannerCreator {
 			elementId = "child-second-" + (i + 1 );
 			Div childSecondDiv = divContainerCreator(elementId, cssClass);
 			
-			//childFirstDiv.appendText("" + frameImageElementList.get(i).getOnTime() + frameImageElementList.get(i).getOffTime());
-			childSecondDiv.appendText(frameTextElementList.get(i).getText());
+			childFirstDiv.appendText("" + frameImageElementList.get(i).getOnTime() + frameImageElementList.get(i).getOffTime());
+			childSecondDiv.appendText(frameTextElementList.get(i).getText() + " " + frameTextElementList.get(i).getOnTime() + " " + frameTextElementList.get(i).getOffTime());
 			wrapperDiv.appendChild(childFirstDiv);
 			wrapperDiv.appendChild(childSecondDiv);
 		}
@@ -280,21 +281,6 @@ public class BannerCreator {
 		}
 		
 		//append javascript code in body tag of HTML content of banner
-		body.appendChild(scriptTagFirst);
-		body.appendChild(scriptTagSecond);
-	}
-	
-	private void generateScript(Body body) {
-		Script scriptTagFirst = new Script("");
-		Script scriptTagSecond = new Script("");
-		scriptTagFirst.setAttribute("src", "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js");
-		scriptTagSecond.appendChild(new Text("$(document).ready(function(){\r\n" + 
-				"	$('.child-first').animate({left:\"250px\"}, \"slow\")\r\n" + 
-				"    					.animate({top:\"250px\"}, \"slow\")\r\n" + 
-				"    					.animate({left:\"300px\"}, \"slow\")\r\n" + 
-				"    					.animate({top:\"0px\"}, \"slow\");\r\n" + 
-				"});"));
-		
 		body.appendChild(scriptTagFirst);
 		body.appendChild(scriptTagSecond);
 	}
