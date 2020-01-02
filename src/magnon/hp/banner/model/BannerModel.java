@@ -11,6 +11,9 @@ public class BannerModel {
 	private String colorpicker;
 	private String hpl_link;
 	private String target;
+	private String animation_loop;
+	private String loop_count;
+	private String pause_on_hover;
 	private List<FrameModel> frames;
 	
 	
@@ -31,6 +34,24 @@ public class BannerModel {
 	}
 	public void setCanvas_height(String canvas_height) {
 		this.canvas_height = canvas_height;
+	}
+	public String getAnimation_loop() {
+		return animation_loop;
+	}
+	public void setAnimation_loop(String animation_loop) {
+		this.animation_loop = animation_loop;
+	}
+	public String getLoop_count() {
+		return loop_count;
+	}
+	public void setLoop_count(String loop_count) {
+		this.loop_count = loop_count;
+	}
+	public String getPause_on_hover() {
+		return pause_on_hover;
+	}
+	public void setPause_on_hover(String pause_on_hover) {
+		this.pause_on_hover = pause_on_hover;
 	}
 	public String getCanvas_width() {
 		return canvas_width;
@@ -65,7 +86,7 @@ public class BannerModel {
 	
 	
 	public String toString() {
-		return "Frame Size:"+this.frames.size();
+		return "Frame Size:"+this.frames.size()+" ColorPicker:"+this.colorpicker+" Frame Image:"+this.frames.toString();
 	}
 
 }

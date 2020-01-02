@@ -10,3 +10,11 @@
 .fields-wrapper #hpl-link, .fields-wrapper #no-of-time, .fields-wrapper .banner-text-field {width: 200px !important;}
 .lebel-align {width: 200px;}
 .ui-checkboxradio-label {margin-right: 10px;}
+.wrapper .lower-form-wrapper {border: 1px solid; margin: 35px;}
+.wrapper .lower-form-wrapper .inner-wrapper:nth-of-type(odd) {background-color: #D9E2F3;}
+.wrapper .lower-form-wrapper .inner-wrapper:nth-of-type(even) {background-color: #FFFFFF;}
+.wrapper .add-more {padding: 10px 20px; float: right; background: #007FFF; color: #ffffff; text-decoration: none; margin: 10px;}
+.wrapper .frame-inner-wrapper {padding: 10px; border: 2px solid #000;}
+.wrapper .frame-inner-wrapper:nth-of-type(odd) {background-color: #A0EE5E;}
+.wrapper .frame-inner-wrapper:nth-of-type(even) {background-color: #FFFFFF;}
+.wrapper .submit-button {width: 200px; height: 45px; cursor: pointer; float: right; border: none; margin: 15px 0; background-color: #888B92; color: #ffffff;}

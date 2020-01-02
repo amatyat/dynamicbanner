@@ -34,34 +34,7 @@ public class UploadDownloadFileServlet extends HttpServlet {
 		fileFactory.setRepository(filesDir);
 		this.uploader = new ServletFileUpload(fileFactory);
 	}
-/*	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String fileName = request.getParameter("fileName");
-		if(fileName == null || fileName.equals("")){
-			throw new ServletException("File Name can't be null or empty");
-		}
-		File file = new File("F:\\Anju"+File.separator+fileName);
-		if(!file.exists()){
-			throw new ServletException("File doesn't exists on server.");
-		}
-		System.out.println("File location on server::"+file.getAbsolutePath());
-		ServletContext ctx = getServletContext();
-		InputStream fis = new FileInputStream(file);
-		String mimeType = ctx.getMimeType(file.getAbsolutePath());
-		response.setContentType(mimeType != null? mimeType:"application/octet-stream");
-		response.setContentLength((int) file.length());
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-		
-		ServletOutputStream os       = response.getOutputStream();
-		byte[] bufferData = new byte[1024];
-		int read=0;
-		while((read = fis.read(bufferData))!= -1){
-			os.write(bufferData, 0, read);
-		}
-		os.flush();
-		os.close();
-		fis.close();
-		System.out.println("File downloaded at client successfully");
-	}*/
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String fileName = request.getParameter("fileName");
 		String user = request.getParameter("user");
@@ -95,6 +68,8 @@ public class UploadDownloadFileServlet extends HttpServlet {
 		fis.close();
 		System.out.println("File downloaded at client successfully");
 	}
+	
+	//TBD Change/Remove
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(!ServletFileUpload.isMultipartContent(request)){
 			throw new ServletException("Content type is not multipart/form-data");
@@ -113,6 +88,7 @@ public class UploadDownloadFileServlet extends HttpServlet {
 				System.out.println("ContentType="+fileItem.getContentType());
 				System.out.println("Size in bytes="+fileItem.getSize());
 				System.out.println("Absolute Path="+request.getServletContext().getAttribute("FILES_DIR"));
+				//TBD change
 				File file = new File("F:\\Anju"+File.separator+fileItem.getName());
 				System.out.println("Absolute Path at server="+file.getAbsolutePath());
 				fileItem.write(file);

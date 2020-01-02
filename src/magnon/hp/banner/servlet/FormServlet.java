@@ -1,21 +1,15 @@
 package magnon.hp.banner.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.io.File;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -24,16 +18,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
-
-import magnon.hp.banner.db.JDBCConncetionProvider;
-import magnon.hp.banner.model.*;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import magnon.hp.banner.db.JDBCConncetionProvider;
+import magnon.hp.banner.model.BannerModel;
+import magnon.hp.banner.model.FrameModel;
+import magnon.hp.banner.model.ImageModel;
+import magnon.hp.banner.model.TextModel;
 
 /**
  * Servlet implementation class FormServlet
@@ -105,7 +101,7 @@ public class FormServlet extends HttpServlet {
 		// gets absolute path of the web application
 		String appPath = request.getServletContext().getRealPath(""); // constructs	pat of the directory to save uploaded file 
 
-		String canvas_width = null, canvas_height = null, colorpicker, hpl_link, target = null;
+		String canvas_width = null, canvas_height = null, colorpicker, hpl_link, target = null, animation_loop = null, loop_count = null, pause_on_hover = null;
 
 		//total frames
 		int totalFrameCount = 0;
@@ -207,6 +203,18 @@ public class FormServlet extends HttpServlet {
 						target = fileItem.getString();
 						bannerModel.setTarget(target);
 					}
+					if((fileItem.getFieldName()).equals("loop")) {
+						animation_loop = fileItem.getString();
+						bannerModel.setAnimation_loop(animation_loop);
+					}
+					if((fileItem.getFieldName()).equals("no_of_time")) {
+						loop_count = fileItem.getString();
+						bannerModel.setLoop_count(loop_count);
+					}
+					if((fileItem.getFieldName()).equals("pause")) {
+						pause_on_hover = fileItem.getString();
+						bannerModel.setPause_on_hover(pause_on_hover);
+					}
 					if((fileItem.getFieldName()).equals("frame_start[]")) {
 						frameCount = Integer.parseInt(fileItem.getString());
 						frame = new FrameModel();
@@ -291,6 +299,8 @@ public class FormServlet extends HttpServlet {
 						imageModel.setStopCoordinateY(stopCoordinateY);
 					}
 					if((fileItem.getFieldName()).equals("image_effect[frame_" + frameCount + "][]")) {
+						imageModel.setEffect(fileItem.getString());
+						
 						imageList.add(imageModel);
 					}
 
@@ -354,7 +364,8 @@ public class FormServlet extends HttpServlet {
 						bannerText.setStopCoordinateY(stopCoordinateY);
 					}
 					if((fileItem.getFieldName()).equals("text_effect[frame_" + frameCount + "][]")) {
-
+						bannerText.setEffect(fileItem.getString());
+						
 						bannerTextList.add(bannerText);
 					}
 

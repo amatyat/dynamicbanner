@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
 		// build HTML code
 		String htmlRespone = "<html>";
 		try {
-
+			//TBD Change
 			Statement statement = con.createStatement();
 			String queryString = "select * from banneruser where name='"+username+"'";
 			ResultSet rs = statement.executeQuery(queryString);

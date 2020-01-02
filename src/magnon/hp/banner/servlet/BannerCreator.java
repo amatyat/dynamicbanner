@@ -143,7 +143,9 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 		    		"    background: "+bannerModel.getColorpicker()+";\r\n" + 
 		    		"    position: relative;\r\n" + 
 		    		"    cursor: pointer;\r\n" + 
-		    		"}\r\n";
+		    		"}\r\n"+
+		    		".wrapper .child{\r\n"
+		    		+ "display:  none;}\r\n";
 		    
 		    List<ImageModel> frameImageElementList = new ArrayList<>();
 		    List<TextModel> frameTextElementList = new ArrayList<>();
@@ -197,7 +199,7 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 	    	frameCounter = 1;
 	    	for (FrameModel firstFrame : frameList) {
 	    		//generate and append javascript
-			    obj.generateScript(body, firstFrame, scriptTagSecond, frameCounter);
+			    obj.generateScript(body, firstFrame, scriptTagSecond, frameCounter, bannerModel);
 			    
 			    frameCounter++;
 	    	}
@@ -253,9 +255,16 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 	}
 	
 	public void appendTweenMaxLibrary(Body body) {
+		//append tweenmax javascript library
 		Script scriptTagFirst = new Script("");
 		scriptTagFirst.setAttribute("type", "text/javascript");
 		scriptTagFirst.setAttribute("src", "https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js");
+		body.appendChild(scriptTagFirst);
+		
+		//append jQuery javascript library
+		scriptTagFirst = new Script("");
+		scriptTagFirst.setAttribute("type", "text/javascript");
+		scriptTagFirst.setAttribute("src", "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js");
 		body.appendChild(scriptTagFirst);
 	}
 	
@@ -301,7 +310,7 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 		String elementId = "";
 		List<ImageModel> frameImageElementList = firstFrame.getImageList();
 		for (int i = 0; i < frameImageElementList.size(); i++) {
-			cssClass = "frame" + frameCounter + "-child-first-" + (i + 1 );
+			cssClass = "child frame" + frameCounter + "-child-first-" + (i + 1 );
 			elementId = "frame" + frameCounter + "-child-first-" + (i + 1 );
 			Div childFirstDiv = divContainerCreator(elementId, cssClass);
 			
@@ -311,7 +320,7 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 		
 		List<TextModel> frameTextElementList = firstFrame.getTextList();
 		for (int i = 0; i < frameImageElementList.size(); i++) {
-			cssClass = "frame" + frameCounter + "-child-second-" + (i + 1 );
+			cssClass = "child frame" + frameCounter + "-child-second-" + (i + 1 );
 			elementId = "frame" + frameCounter + "-child-second-" + (i + 1 );
 			Div childSecondDiv = divContainerCreator(elementId, cssClass);
 			
@@ -322,9 +331,8 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 		//body.appendChild(wrapperDiv);
 	}
 	
-	private void generateScript(Body body, FrameModel firstFrame, Script scriptTagSecond, int frameCounter) {
+	private void generateScript(Body body, FrameModel firstFrame, Script scriptTagSecond, int frameCounter, BannerModel bannerModel) {
 		List<ImageModel> frameImageElementList = firstFrame.getImageList();
-		List<TextModel> frameTextElementList = firstFrame.getTextList();
 		//image on/off times in sec
 		Float imageAnimationStartTime, imageAnimationEndTime;
 		
@@ -353,12 +361,25 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 			imageAnimationStopY = firstFrame.getImageList().get(i).getStopCoordinateY();
 			
 			//TweenMax javascript for animation
-			String animateInLoop;
-			animateInLoop = "{repeat:-1}";
-			scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
-					"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-first-" + (i + 1 ) + "\");\r\n" + 
-					"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + "});\r\n" +
-					"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + "}, " + imageAnimationStartTime + ")\r\n"));
+			/*
+			 * if(callBackFlag == 1) { callBackStr = "{onComplete: function(){\r\n" +
+			 * "	//delay of 2 sec to start the next loop\r\n" +
+			 * "	TweenLite.delayedCall(2, updateContent);\r\n" + "}}";
+			 * 
+			 * callBackFlag++; }
+			 */
+			
+			//code for animation effect starts
+			String frameElementEffect = firstFrame.getImageList().get(i).getEffect().trim();
+			if(frameElementEffect.equals("fadein")) {
+				this.setImageScriptIfFadeInEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i);
+			}
+			else if(frameElementEffect.equals("fadeout")){
+				this.setImageScriptIfFadeOutEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i);
+			}else {
+				this.setImageScriptIfNoEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i);
+			}
+			//code for animation effect ends
 		}
 		
 		//javascript for text element
@@ -375,14 +396,104 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 			textAnimationStopY = firstFrame.getTextList().get(i).getStopCoordinateY();
 			
 			//TweenMax javascript for animation
-			String animateInLoop;
-			animateInLoop = "{repeat:-1}";
-			scriptTagSecond.appendChild(new Text("var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
-					"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-second-" + (i + 1 ) + "\");\r\n" +
-					"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + "});\r\n" +
-					"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {x: " + textAnimationStopX + ", y: " + textAnimationStopY + "}, " + textAnimationStartTime + ");"));
+			/*
+			 * if(callBackFlag == 1) { callBackStr = "{onComplete: function(){\r\n" +
+			 * "	//delay of 2 sec to start the next loop\r\n" +
+			 * "	TweenLite.delayedCall(2, updateContent);\r\n" + "}}"; }
+			 */
+			
+			//code for animation effect starts
+			String frameElementEffect = firstFrame.getImageList().get(i).getEffect().trim();
+			if(frameElementEffect.equals("fadein")) {
+				this.setTextScriptIfFadeInEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i);
+			}
+			else if(frameElementEffect.equals("fadeout")){
+				this.setTextScriptIfFadeOutEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i);
+			}else {
+				this.setTextScriptIfNoEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i);
+			}
+			//code for animation effect ends
+			
+			//callBackFlag++;
 		}
 		
+		/*
+		 * String animationLoopCountStr = bannerModel.getLoop_count().trim(); int
+		 * animationLoopCount = 0; if(!animationLoopCountStr.equals("") &&
+		 * !animationLoopCountStr.equals("0")) { animationLoopCount =
+		 * Integer.parseInt(animationLoopCountStr); }
+		 * 
+		 * if(animationLoopCount != 0) { scriptTagSecond.appendChild(new Text("" +
+		 * "var loopCounter = 0;\r\n" + "function updateContent(){\r\n" +
+		 * "	if(loopCounter == " + animationLoopCount + "){\r\n" +
+		 * "		timeLineSecond1.clear();\r\n" + "	}\r\n" + "	loopCounter++;\r\n"
+		 * + "	\r\n" + "	timeLineFirst1.restart();\r\n" +
+		 * "	timeLineSecond1.restart();\r\n" + "}")); }
+		 */
+		
+		//code to pause animation on hover starts
+		String pauseOnHoverStr = bannerModel.getPause_on_hover().trim(); 
+		int pauseOnHover = 0; 
+		if(!pauseOnHoverStr.equals("") && !pauseOnHoverStr.equals("0")) { 
+			pauseOnHover = Integer.parseInt(pauseOnHoverStr); 
+		}
+		
+		if(pauseOnHover == 1) {
+			this.setPauseOnHover(body, scriptTagSecond, bannerModel);
+		}
+		//code to pause animation on hover ends
+		
+	}
+	
+	public void setImageScriptIfNoEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i) {
+		scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+				"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-first-" + (i + 1 ) + "\");\r\n" + 
+				"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + "});\r\n" +
+				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + "}, " + imageAnimationStartTime + ")\r\n"));
+	}
+	
+	public void setImageScriptIfFadeInEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i) {
+		scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+				"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-first-" + (i + 1 ) + "\");\r\n" + 
+				"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + ", opacity: 0});\r\n" +
+				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + ", opacity: 1}, " + imageAnimationStartTime + ")\r\n"));
+	}
+	
+	public void setImageScriptIfFadeOutEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i) {
+		scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+				"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-first-" + (i + 1 ) + "\");\r\n" + 
+				"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + ", opacity: 1});\r\n" +
+				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + ", opacity: 0}, " + imageAnimationStartTime + ")\r\n"));
+	}
+	
+	public void setTextScriptIfNoEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i) {
+		scriptTagSecond.appendChild(new Text("var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+				"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-second-" + (i + 1 ) + "\");\r\n" +
+				"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + "});\r\n" +
+				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + "}, " + textAnimationStartTime + ");"));
+	}
+	
+	public void setTextScriptIfFadeInEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i) {
+		scriptTagSecond.appendChild(new Text("var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+				"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-second-" + (i + 1 ) + "\");\r\n" +
+				"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + ", opacity: 0});\r\n" +
+				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + ", opacity: 1}, " + textAnimationStartTime + ");"));
+	}
+	
+	public void setTextScriptIfFadeOutEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i) {
+		scriptTagSecond.appendChild(new Text("var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+				"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-second-" + (i + 1 ) + "\");\r\n" +
+				"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + ", opacity: 1});\r\n" +
+				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + ", opacity: 0}, " + textAnimationStartTime + ");"));
+	}
+	
+	public void setPauseOnHover(Body body, Script scriptTagSecond, BannerModel bannerModel) {
+		scriptTagSecond.appendChild(new Text(""
+										+ "$(\".wrapper\").hover(function(){\r\n" + 
+										"	TweenMax.pauseAll(true, true, true); \r\n" + 
+										"}, function(){\r\n" + 
+										"	TweenMax.resumeAll(true, true, true);\r\n" + 
+										"});"));
 	}
 	
 	/* Returns true if url is valid */

@@ -44,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
 		// build HTML code
 		String htmlRespone = "<html>";
 		try {
-
+			//TBD change
 			PreparedStatement ps = con.prepareStatement
 					(SQL_INSERT);
 			ps.setString(1, username);
