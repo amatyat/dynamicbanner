@@ -26,6 +26,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import magnon.hp.banner.db.JDBCConncetionProvider;
+import magnon.hp.banner.html.BannerCreator;
 import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
 import magnon.hp.banner.model.ImageModel;
@@ -98,9 +99,6 @@ public class FormServlet extends HttpServlet {
 
 		//	bannerModel.setFrames(frameList);
 
-		// gets absolute path of the web application
-		String appPath = request.getServletContext().getRealPath(""); // constructs	pat of the directory to save uploaded file 
-
 		String canvas_width = null, canvas_height = null, colorpicker, hpl_link, target = null, animation_loop = null, loop_count = null, pause_on_hover = null;
 
 		//total frames
@@ -139,9 +137,6 @@ public class FormServlet extends HttpServlet {
 		/////////////////////////
 
 		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-
-		//out.println("Hello<br/>");
 
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipartContent) {
@@ -166,8 +161,6 @@ public class FormServlet extends HttpServlet {
 			ImageModel imageModel = null;
 			TextModel bannerText = null;
 			int frameCount = 1;
-			int imageCount =0;
-			int imagePrevCount =0;
 			while (it.hasNext()) {
 				String onTime = null, offTime = null;
 				String startCoordinates = null, stopCoordinates = null;
@@ -382,9 +375,6 @@ public class FormServlet extends HttpServlet {
 					fileItem.write(storeFile);
 					//file upload code ends
 
-					imageCount++;
-
-
 					imageModel = new ImageModel();
 					imageModel.setImagePath(fileName);
 
@@ -396,42 +386,16 @@ public class FormServlet extends HttpServlet {
 
 			PrintWriter writer = response.getWriter();
 
-			System.out.println("Size ::::::::::::::"+bannerModel.getFrames().size());
-
-			for(FrameModel framemodel: bannerModel.getFrames()) {
-				System.out.println("aaaaaaaa Frame" +framemodel);
-				System.out.println(framemodel);
-
-				System.out.println("Image");
-				for(int im = 0; im<framemodel.getImageList().size();im++) {
-					System.out.println(framemodel.getImageList().get(im).getImagePath());
-				}
-
-				System.out.println("Text");
-				for(int im = 0; im<framemodel.getTextList().size();im++) {
-					System.out.println(framemodel.getTextList().get(im).getText());
-				}
-
-			}
-
 			String htmlRespone = "";
-			htmlRespone += BannerCreator.createHTML(bannerModel);
-
-			htmlRespone += "user is: " + bannerModel.getUsername()+ "<br/>";	
-			htmlRespone += "canvas_width is a: " + canvas_width + "<br/>";		
-			htmlRespone += "canvas_height is: " + canvas_height + "<br/>";	
-			htmlRespone += "Path: " + savePath + "<br/>";
-			htmlRespone += "hpl_link is: " + frameList.get(0).getImageList().get(0).getImagePath() + "<br/>";
-			htmlRespone += "target is: " + target + "<br/>";
-
+			htmlRespone += BannerCreator.createBanner(bannerModel);
 
 			htmlRespone += "Download Banners from below: <br/>";
-			System.out.println(bannerModel.getUsername());
 
 			//htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+bannerModel.getFoldername()+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+bannerModel.getFoldername()+"</a>";
 
-			JDBCConncetionProvider jConncetionProvider = new JDBCConncetionProvider();
-			Connection con = jConncetionProvider.connect();
+			//Gets folder details from database 
+			//htmlRespone = DBOperations.select(bannerModel, htmlRespone);
+			Connection con = new JDBCConncetionProvider().connect();
 			try {
 
 				Statement statement = con.createStatement();
@@ -447,8 +411,6 @@ public class FormServlet extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-
 			// return response
 			writer.println(htmlRespone);	
 
