@@ -51,8 +51,6 @@ public class BannerCreator {
 		    Div wrapperDiv = HTMLCreator.divContainerCreator(id, cssClass);
 		    wrapperDiv =  BannerUtil.addHyperlinkToBannerWrapperContainer(bannerModel, wrapperDiv);
 		    
-	    	//FrameModel firstFrame = frameList.get(0);
-	    	
 		    //style
 		    String styleString = ".wrapper{\r\n" + 
 		    		"    width: "+bannerModel.getCanvas_width()+"px;\r\n" + 
@@ -66,6 +64,10 @@ public class BannerCreator {
 		    
 		    List<ImageModel> frameImageElementList = new ArrayList<>();
 		    List<TextModel> frameTextElementList = new ArrayList<>();
+		    
+		    //iterate multiple frames of banner
+		    int frameSize = frameList.size();
+		    
 	    	//iterate multiple frames of banner
 		    int frameCounter = 1;
 	    	for (FrameModel firstFrame : frameList) {
@@ -116,7 +118,7 @@ public class BannerCreator {
 	    	frameCounter = 1;
 	    	for (FrameModel firstFrame : frameList) {
 	    		//generate and append javascript
-			    new ScriptCreator().generateScript(body, firstFrame, scriptTagSecond, frameCounter, bannerModel);
+			    new ScriptCreator().generateScript(body, firstFrame, scriptTagSecond, frameCounter, bannerModel,frameSize);
 			    
 			    frameCounter++;
 	    	}

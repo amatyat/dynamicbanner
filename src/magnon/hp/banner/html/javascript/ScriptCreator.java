@@ -16,7 +16,7 @@ public class ScriptCreator {
 
 	}
 
-	public void generateScript(Body body, FrameModel firstFrame, Script scriptTagSecond, int frameCounter, BannerModel bannerModel) {
+	public void generateScript(Body body, FrameModel firstFrame, Script scriptTagSecond, int frameCounter, BannerModel bannerModel, int frameSize) {
 		List<ImageModel> frameImageElementList = firstFrame.getImageList();
 		//image on/off times in sec
 		Float imageAnimationStartTime, imageAnimationEndTime;
@@ -57,12 +57,12 @@ public class ScriptCreator {
 			//code for animation effect starts
 			String frameElementEffect = firstFrame.getImageList().get(i).getEffect().trim();
 			if(frameElementEffect.equals("fadein")) {
-				setImageScriptIfFadeInEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i);
+				setImageScriptIfFadeInEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i, frameSize);
 			}
 			else if(frameElementEffect.equals("fadeout")){
-				setImageScriptIfFadeOutEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i);
+				setImageScriptIfFadeOutEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i, frameSize);
 			}else {
-				setImageScriptIfNoEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i);
+				setImageScriptIfNoEffects(scriptTagSecond, frameCounter, imageAnimationStartX, imageAnimationStartY, imageAnimationEndTime, imageAnimationStopX, imageAnimationStopY, imageAnimationStartTime, i, frameSize);
 			}
 			//code for animation effect ends
 		}
@@ -90,12 +90,12 @@ public class ScriptCreator {
 			//code for animation effect starts
 			String frameElementEffect = firstFrame.getImageList().get(i).getEffect().trim();
 			if(frameElementEffect.equals("fadein")) {
-				setTextScriptIfFadeInEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i);
+				setTextScriptIfFadeInEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i, frameSize);
 			}
 			else if(frameElementEffect.equals("fadeout")){
-				setTextScriptIfFadeOutEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i);
+				setTextScriptIfFadeOutEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i, frameSize);
 			}else {
-				setTextScriptIfNoEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i);
+				setTextScriptIfNoEffects(scriptTagSecond, frameCounter, textAnimationStartX, textAnimationStartY, textAnimationEndTime, textAnimationStopX, textAnimationStopY, textAnimationStartTime, i, frameSize);
 			}
 			//code for animation effect ends
 			
@@ -129,48 +129,97 @@ public class ScriptCreator {
 		//code to pause animation on hover ends
 		
 	}
-
 	
-	private void setImageScriptIfNoEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i) {
-		scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+
+	public void setImageScriptIfNoEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i, int frameSize) {
+		String scriptStr = "var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
 				"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-first-" + (i + 1 ) + "\");\r\n" + 
 				"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + "});\r\n" +
-				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + "}, " + imageAnimationStartTime + ")\r\n"));
+				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + "}, " + imageAnimationStartTime + ")\r\n";
+		
+		if(frameCounter != frameSize) {
+			scriptStr += "timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", 0.0, {\r\n" + 
+					"			display: 'none'\r\n" + 
+					"		});";
+		}
+		
+		
+		scriptTagSecond.appendChild(new Text(scriptStr));
 	}
 	
-	private void setImageScriptIfFadeInEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i) {
-		scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+	public void setImageScriptIfFadeInEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i, int frameSize) {
+		String scriptStr = "var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
 				"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-first-" + (i + 1 ) + "\");\r\n" + 
 				"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + ", opacity: 0});\r\n" +
-				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + ", opacity: 1}, " + imageAnimationStartTime + ")\r\n"));
+				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + ", opacity: 1}, " + imageAnimationStartTime + ")\r\n";
+		
+		if(frameCounter != frameSize) {
+			scriptStr += "timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", 0.0, {\r\n" + 
+					"			display: 'none'\r\n" + 
+					"		});";
+		}
+		
+		scriptTagSecond.appendChild(new Text(scriptStr));
 	}
 	
-	private void setImageScriptIfFadeOutEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i) {
-		scriptTagSecond.appendChild(new Text("var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+	public void setImageScriptIfFadeOutEffects(Script scriptTagSecond, int frameCounter, Float imageAnimationStartX, Float imageAnimationStartY, Float imageAnimationEndTime, Float imageAnimationStopX, Float imageAnimationStopY, Float imageAnimationStartTime, int i, int frameSize) {
+		String scriptStr = "var timeLineFirst" + (i + 1 ) + " = new TimelineLite();\r\n" + 
 				"var childDivFirst" + (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-first-" + (i + 1 ) + "\");\r\n" + 
 				"timeLineFirst" + (i + 1 ) + ".set(childDivFirst" + (i + 1 ) + ", {x: " + imageAnimationStartX + ", y: " + imageAnimationStartY + ", opacity: 1});\r\n" +
-				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + ", opacity: 0}, " + imageAnimationStartTime + ")\r\n"));
+				"timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", " + imageAnimationEndTime + ", {display: 'block', x: " + imageAnimationStopX + ", y: " + imageAnimationStopY + ", opacity: 0}, " + imageAnimationStartTime + ")\r\n";
+		
+		if(frameCounter != frameSize) {
+			scriptStr += "timeLineFirst" + (i + 1 ) + ".to(childDivFirst" + (i + 1 ) + ", 0.0, {\r\n" + 
+					"			display: 'none'\r\n" + 
+					"		});";
+		}
+		
+		scriptTagSecond.appendChild(new Text(scriptStr));
 	}
 	
-	private void setTextScriptIfNoEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i) {
-		scriptTagSecond.appendChild(new Text("var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+	public void setTextScriptIfNoEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i, int frameSize) {
+		String scriptStr = "var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
 				"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-second-" + (i + 1 ) + "\");\r\n" +
 				"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + "});\r\n" +
-				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + "}, " + textAnimationStartTime + ");"));
+				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + "}, " + textAnimationStartTime + ");";
+		
+		if(frameCounter != frameSize) {
+			scriptStr += "timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", 0.0, {\r\n" + 
+					"			display: 'none'\r\n" + 
+					"		});";
+		}
+		
+		scriptTagSecond.appendChild(new Text(scriptStr));
 	}
 	
-	private void setTextScriptIfFadeInEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i) {
-		scriptTagSecond.appendChild(new Text("var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+	public void setTextScriptIfFadeInEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i, int frameSize) {
+		String scriptStr = "var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
 				"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-second-" + (i + 1 ) + "\");\r\n" +
 				"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + ", opacity: 0});\r\n" +
-				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + ", opacity: 1}, " + textAnimationStartTime + ");"));
+				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + ", opacity: 1}, " + textAnimationStartTime + ");";
+		
+		if(frameCounter != frameSize) {
+			scriptStr += "timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", 0.0, {\r\n" + 
+					"			display: 'none'\r\n" + 
+					"		});";
+		}
+		
+		scriptTagSecond.appendChild(new Text(scriptStr));
 	}
 	
-	private void setTextScriptIfFadeOutEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i) {
-		scriptTagSecond.appendChild(new Text("var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
+	public void setTextScriptIfFadeOutEffects(Script scriptTagSecond, int frameCounter, Float textAnimationStartX, Float textAnimationStartY, Float textAnimationEndTime, Float textAnimationStopX, Float textAnimationStopY, Float textAnimationStartTime, int i, int frameSize) {
+		String scriptStr = "var timeLineSecond" + (i + 1 ) + " = new TimelineLite();\r\n" + 
 				"var childDivSecond"+ (i + 1 ) + " = document.getElementById(\"frame" + frameCounter + "-child-second-" + (i + 1 ) + "\");\r\n" +
 				"timeLineSecond" + (i + 1 ) + ".set(childDivSecond" + (i + 1 ) + ", {x: " + textAnimationStartX + ", y: " + textAnimationStartY + ", opacity: 1});\r\n" +
-				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + ", opacity: 0}, " + textAnimationStartTime + ");"));
+				"timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", " + textAnimationEndTime + ", {display: 'block', x: " + textAnimationStopX + ", y: " + textAnimationStopY + ", opacity: 0}, " + textAnimationStartTime + ");";
+		
+		if(frameCounter != frameSize) {
+			scriptStr += "timeLineSecond" + (i + 1 ) + ".to(childDivSecond" + (i + 1 ) + ", 0.0, {\r\n" + 
+					"			display: 'none'\r\n" + 
+					"		});";
+		}
+		
+		scriptTagSecond.appendChild(new Text(scriptStr));
 	}
 	
 	private void setPauseOnHover(Body body, Script scriptTagSecond, BannerModel bannerModel) {
