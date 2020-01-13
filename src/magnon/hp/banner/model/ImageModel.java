@@ -6,12 +6,36 @@ public class ImageModel {
 	private String imagePath;
 	private float onTime;
 	private float offTime;
-	private float sartCoordinateX;
-	private float sartCoordinateY;
+	private float endOnTime;
+	private float endOffTime;
+	private float startCoordinateX;
+	private float startCoordinateY;
 	private float stopCoordinateX;
 	private float stopCoordinateY;
 	private String effect;
+	private String endEffect;
+	private String width;
+	private String height;
+	private int elementNumber;
 	
+	public String getWidth() {
+		return width;
+	}
+	public int getElementNumber() {
+		return elementNumber;
+	}
+	public void setElementNumber(int elementNumber) {
+		this.elementNumber = elementNumber;
+	}
+	public void setWidth(String width) {
+		this.width = width;
+	}
+	public String getHeight() {
+		return height;
+	}
+	public void setHeight(String height) {
+		this.height = height;
+	}
 	public String getImagePath() {
 		return imagePath;
 	}
@@ -36,23 +60,41 @@ public class ImageModel {
 	public void setEffect(String effect) {
 		this.effect = effect;
 	}
+	public float getEndOnTime() {
+		return endOnTime;
+	}
+	public void setEndOnTime(float endOnTime) {
+		this.endOnTime = endOnTime;
+	}
+	public float getEndOffTime() {
+		return endOffTime;
+	}
+	public void setEndOffTime(float endOffTime) {
+		this.endOffTime = endOffTime;
+	}
+	public String getEndEffect() {
+		return endEffect;
+	}
+	public void setEndEffect(String endEffect) {
+		this.endEffect = endEffect;
+	}
 	public int getIsImage() {
 		return isImage;
 	}
 	public void setIsImage(int isImage) {
 		this.isImage = isImage;
 	}
-	public float getSartCoordinateX() {
-		return sartCoordinateX;
+	public float getStartCoordinateX() {
+		return startCoordinateX;
 	}
-	public void setSartCoordinateX(float sartCoordinateX) {
-		this.sartCoordinateX = sartCoordinateX;
+	public void setStartCoordinateX(float startCoordinateX) {
+		this.startCoordinateX = startCoordinateX;
 	}
-	public float getSartCoordinateY() {
-		return sartCoordinateY;
+	public float getStartCoordinateY() {
+		return startCoordinateY;
 	}
-	public void setSartCoordinateY(float sartCoordinateY) {
-		this.sartCoordinateY = sartCoordinateY;
+	public void setStartCoordinateY(float startCoordinateY) {
+		this.startCoordinateY = startCoordinateY;
 	}
 	public float getStopCoordinateX() {
 		return stopCoordinateX;

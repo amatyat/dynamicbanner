@@ -47,7 +47,7 @@ public class UploadDownloadFileServlet extends HttpServlet {
 		File dir = new File("F:\\Banner\\BannerServlet\\WebContent\\outputBanner"+File.separator+user+File.separator+folder);
 		
 		if(!zipfile.exists()){
-			  ZipUtil.zipDirectory(dir, zipfile.getAbsolutePath());
+			  new ZipUtil().zipDirectory(dir, zipfile.getAbsolutePath());
 		}
 		System.out.println("File location on server::"+zipfile.getAbsolutePath());
 		ServletContext ctx = getServletContext();

@@ -4,6 +4,7 @@
 .fields-wrapper .time-field {width: 65px!important; margin-right: 10px; height: 25px;}
 .inner-wrapper label {float: left;}
 .inner-wrapper .fields-wrapper {float: left; margin-left: 10px;}
+.fields-wrapper .width-label, .fields-wrapper .height-label, .fields-wrapper .fields-separator {display: none;}
 .clear {clear: both;}
 .field-container {padding: 10px 40px;}
 .fields-wrapper select {width: auto !important;}
@@ -11,6 +12,8 @@
 .lebel-align {width: 200px;}
 .ui-checkboxradio-label {margin-right: 10px;}
 .wrapper .lower-form-wrapper {border: 1px solid; margin: 35px;}
+.wrapper .lower-form-wrapper .inner-wrapper {/*position: relative;*/}
+.remove-element {/*position: absolute; right: 20px; top: 45px;*/ cursor: pointer;}
 .wrapper .lower-form-wrapper .inner-wrapper:nth-of-type(odd) {background-color: #D9E2F3;}
 .wrapper .lower-form-wrapper .inner-wrapper:nth-of-type(even) {background-color: #FFFFFF;}
 .wrapper .add-more {padding: 10px 20px; float: right; background: #007FFF; color: #ffffff; text-decoration: none; margin: 10px;}

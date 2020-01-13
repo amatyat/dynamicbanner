@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hp.gagawa.java.elements.Body;
 import com.hp.gagawa.java.elements.Div;
+import com.hp.gagawa.java.elements.Img;
 
 import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
@@ -20,10 +21,12 @@ public class HTMLCreator {
 		for (int i = 0; i < frameImageElementList.size(); i++) {
 			cssClass = "child frame" + frameCounter + "-child-first-" + (i + 1 );
 			elementId = "frame" + frameCounter + "-child-first-" + (i + 1 );
-			Div childFirstDiv = divContainerCreator(elementId, cssClass);
-			
-			childFirstDiv.appendText("" + frameImageElementList.get(i).getOnTime() + frameImageElementList.get(i).getOffTime());
-			wrapperDiv.appendChild(childFirstDiv);
+			/* Div childFirstDiv = divContainerCreator(elementId, cssClass); */
+
+			Img image = new Img( "", "images/" + frameImageElementList.get(i).getImagePath());
+			image.setCSSClass(cssClass).setId(elementId);
+
+			wrapperDiv.appendChild(image);
 		}
 		
 		List<TextModel> frameTextElementList = firstFrame.getTextList();
@@ -32,9 +35,22 @@ public class HTMLCreator {
 			elementId = "frame" + frameCounter + "-child-second-" + (i + 1 );
 			Div childSecondDiv = divContainerCreator(elementId, cssClass);
 			
-			childSecondDiv.appendText(frameTextElementList.get(i).getText() + " " + frameTextElementList.get(i).getOnTime() + " " + frameTextElementList.get(i).getOffTime());
+			childSecondDiv.appendText(frameTextElementList.get(i).getText());
 			wrapperDiv.appendChild(childSecondDiv);
 		}
+		
+		//code to animate banner in loop starts
+		String animationLoopStr = bannerModel.getAnimation_loop().trim();
+		String animationLoopCountStr = bannerModel.getLoop_count().trim(); 
+		int animationLoopCount = 0; 
+		if(!animationLoopStr.equals("") && !animationLoopStr.equals("0")) { 
+			cssClass = "invisible";
+			elementId = "invisible";
+			Div invisibleDiv = divContainerCreator(elementId, cssClass);
+			
+			wrapperDiv.appendChild(invisibleDiv);
+		}
+		//code to animate banner in loop ends
 		
 		//body.appendChild(wrapperDiv);
 	}

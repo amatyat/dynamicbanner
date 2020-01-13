@@ -6,12 +6,22 @@ public class TextModel {
 	private String text;
 	private float onTime;
 	private float offTime;
-	private float sartCoordinateX;
-	private float sartCoordinateY;
+	private float endOnTime;
+	private float endOffTime;
+	private float startCoordinateX;
+	private float startCoordinateY;
 	private float stopCoordinateX;
 	private float stopCoordinateY;
 	private String effect;
-
+	private String endEffect;
+	private int elementNumber;
+	
+	public int getElementNumber() {
+		return elementNumber;
+	}
+	public void setElementNumber(int elementNumber) {
+		this.elementNumber = elementNumber;
+	}
 	public String getText() {
 		return text;
 	}
@@ -36,23 +46,41 @@ public class TextModel {
 	public void setEffect(String effect) {
 		this.effect = effect;
 	}
+	public float getEndOnTime() {
+		return endOnTime;
+	}
+	public void setEndOnTime(float endOnTime) {
+		this.endOnTime = endOnTime;
+	}
+	public float getEndOffTime() {
+		return endOffTime;
+	}
+	public void setEndOffTime(float endOffTime) {
+		this.endOffTime = endOffTime;
+	}
+	public String getEndEffect() {
+		return endEffect;
+	}
+	public void setEndEffect(String endEffect) {
+		this.endEffect = endEffect;
+	}
 	public int getIsText() {
 		return isText;
 	}
 	public void setIsText(int isText) {
 		this.isText = isText;
 	}
-	public float getSartCoordinateX() {
-		return sartCoordinateX;
+	public float getStartCoordinateX() {
+		return startCoordinateX;
 	}
-	public void setSartCoordinateX(float sartCoordinateX) {
-		this.sartCoordinateX = sartCoordinateX;
+	public void setStartCoordinateX(float startCoordinateX) {
+		this.startCoordinateX = startCoordinateX;
 	}
-	public float getSartCoordinateY() {
-		return sartCoordinateY;
+	public float getStartCoordinateY() {
+		return startCoordinateY;
 	}
-	public void setSartCoordinateY(float sartCoordinateY) {
-		this.sartCoordinateY = sartCoordinateY;
+	public void setStartCoordinateY(float startCoordinateY) {
+		this.startCoordinateY = startCoordinateY;
 	}
 	public float getStopCoordinateX() {
 		return stopCoordinateX;

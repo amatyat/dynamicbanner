@@ -19,8 +19,8 @@
 				<div class="field-container canvas-size">
 					<label class="lebel-align">Choose canvas size : </label>
 					<div class="fields-wrapper">
-						<input type="text" id="canvas-width" name="canvas_width" placeholder="px" class="field"/>
-						<input type="text" id="canvas-height" name="canvas_height" placeholder="px" class="field"/>
+						<input type="text" id="canvas-width" name="canvas_width" placeholder="px" class="field"/>px
+						<input type="text" id="canvas-height" name="canvas_height" placeholder="px" class="field"/>px
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -41,7 +41,7 @@
 					<label class="lebel-align">Background : </label>
 					<div class="fields-wrapper">
 						<label for="border-1">OFF</label>
-						<input type="radio" name="border" id="border-1" value="0" class="radio">
+						<input type="radio" checked="checked" name="border" id="border-1" value="0" class="radio">
 						<label for="border-2">ON</label>
 						<input type="radio" name="border" id="border-2" value="1" class="radio">
 						<input type="text" id="colorpicker" name="colorpicker" value="#123456" class="field"/>
@@ -50,10 +50,21 @@
 					<div class="clear"></div>
 				</div>
 				<div class="field-container loop">
+					<label class="lebel-align">Gradient : </label>
+					<div class="fields-wrapper">
+						<label for="gradient-1">OFF</label>
+						<input type="radio" checked="checked" name="gradient" id="gradient-1" value="0" class="radio">
+						<label for="gradient-2">ON</label>
+						<input type="radio" name="gradient" id="gradient-2" value="1" class="radio">
+						<textarea id="gradient-value" name="gradient_value" rows="4" cols="50" style="display: none;"></textarea>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="field-container loop">
 					<label class="lebel-align">Loop : </label>
 					<div class="fields-wrapper">
 						<label for="loop-1">OFF</label>
-						<input type="radio" name="loop" id="loop-1" value="0" class="radio">
+						<input type="radio" checked="checked" name="loop" id="loop-1" value="0" class="radio">
 						<label for="loop-2">ON</label>
 						<input type="radio" name="loop" id="loop-2" value="1" class="radio">
 						<input type="text" id="no-of-time" name="no_of_time" placeholder="Enter No. of times" class="field" style="display: none;"/>
@@ -64,9 +75,19 @@
 					<label class="lebel-align">Pause on Hover : </label>
 					<div class="fields-wrapper">
 						<label for="pause-1">OFF</label>
-						<input type="radio" name="pause" id="pause-1" value="0" class="radio">
+						<input type="radio" checked="checked" name="pause" id="pause-1" value="0" class="radio">
 						<label for="pause-2">ON</label>
 						<input type="radio" name="pause" id="pause-2" value="1" class="radio">
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="field-container replay">
+					<label class="lebel-align">Replay : </label>
+					<div class="fields-wrapper">
+						<label for="replay-1">OFF</label>
+						<input type="radio" checked="checked" name="replay" id="replay-1" value="0" class="radio">
+						<label for="replay-2">ON</label>
+						<input type="radio" name="replay" id="replay-2" value="1" class="radio">
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -87,19 +108,33 @@
 						
 					</div>
 					<div class="inner-wrapper inner-wrapper-top">
+						<input type="hidden" class="frame-element-count" name="frame_element_count[frame_1][]" value="1">
+						<span class="remove-element">X</span>
 						<div class="field-container banner-image">
-							<label class="lebel-align">Image : </label>
+							<div>
+								<label class="lebel-align">Image : </label>
+							</div>
 							<div class="fields-wrapper">
 								<label for="frame_1-banner-first-image-1">OFF</label>
 								<input type="radio" name="banner_image[frame_1][]" id="frame_1-banner-first-image-1" value="0" class="image-file radio">
 								<label for="frame_1-banner-second-image-1">ON</label>
 								<input type="radio" name="banner_image[frame_1][]" id="frame_1-banner-second-image-1" value="1" class="image-file radio">
 								<input type="file" name="file_name[frame_1][]" style="display: none;" class="image-field">
-								<input type="text" name="image_start_time[frame_1][]" style="display: none;" placeholder="Start Time" class="time-field image-field">
-								<input type="text" name="image_stop_time[frame_1][]" style="display: none;" placeholder="End Time" class="time-field image-field">
 								<input type="text" name="image_start_xy[frame_1][]" style="display: none;" placeholder="Start X,Y" class="time-field image-field">
 								<input type="text" name="image_stop_xy[frame_1][]" style="display: none;" placeholder="Stop X,Y" class="time-field image-field">
+								<input type="text" name="image_width[frame_1][]" style="display: none;" placeholder="Width" class="time-field image-field"><span class="width-label">px</span>
+								<input type="text" name="image_height[frame_1][]" style="display: none;" placeholder="Height" class="time-field image-field"><span class="height-label">px</span>
+								<input type="text" name="image_start_time[frame_1][]" style="display: none;" placeholder="Start Time" class="time-field image-field">
+								<input type="text" name="image_stop_time[frame_1][]" style="display: none;" placeholder="Stop Time" class="time-field image-field stop-time">
 								<select id="image-effect-1" name="image_effect[frame_1][]" style="display: none;" class="field select-effect">
+									<option value="0">Select Effect</option>
+									<option value="fadein">FadeIn</option>
+									<option value="fadeout">FadeOut</option>
+								</select>
+								<span class="fields-separator">|</span>
+								<input type="text" name="image_end_start_time[frame_1][]" style="display: none;" placeholder="End Start Time" class="time-field image-field">
+								<input type="text" name="image_end_stop_time[frame_1][]" style="display: none;" placeholder="End Stop Time" class="time-field image-field stop-time">
+								<select id="image-effect-1" name="image_end_effect[frame_1][]" style="display: none;" class="field select-effect">
 									<option value="0">Select Effect</option>
 									<option value="fadein">FadeIn</option>
 									<option value="fadeout">FadeOut</option>
@@ -108,18 +143,28 @@
 							<div class="clear"></div>
 						</div>
 						<div class="field-container banner-image">
-							<label class="lebel-align">Text : </label>
+							<div>
+								<label class="lebel-align">Text : </label>
+							</div>
 							<div class="fields-wrapper">
 								<label for="frame_1-is-first-text-1">OFF</label>
 								<input type="radio" name="is_text[frame_1][]" id="frame_1-is-first-text-1" value="0" class="banner-text radio">
 								<label for="frame_1-is-second-text-1">ON</label>
 								<input type="radio" name="is_text[frame_1][]" id="frame_1-is-second-text-1" value="1" class="banner-text radio">
 								<input type="text" name="banner_text[frame_1][]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
-								<input type="text" name="text_start_time[frame_1][]" placeholder="Start Time" class="time-field" style="display: none;"/>
-								<input type="text" name="text_end_time[frame_1][]" placeholder="End Time" class="time-field" style="display: none;"/>
 								<input type="text" name="text_start_xy[frame_1][]" placeholder="Start X,Y" class="time-field" style="display: none;"/>
 								<input type="text" name="text_stop_xy[frame_1][]" placeholder="Stop X,Y" class="time-field" style="display: none;"/>
+								<input type="text" name="text_start_time[frame_1][]" placeholder="Start Time" class="time-field" style="display: none;"/>
+								<input type="text" name="text_end_time[frame_1][]" placeholder="End Time" class="time-field stop-time" style="display: none;"/>
 								<select id="image-effect-1" name="text_effect[frame_1][]" style="display: none;" class="field select-text-effect">
+									<option value="0">Select Effect</option>
+									<option value="fadein">FadeIn</option>
+									<option value="fadeout">FadeOut</option>
+								</select>
+								<span class="fields-separator">|</span>
+								<input type="text" name="text_end_start_time[frame_1][]" placeholder="End Start Time" class="time-field" style="display: none;"/>
+								<input type="text" name="text_end_stop_time[frame_1][]" placeholder="End Stop Time" class="time-field stop-time" style="display: none;"/>
+								<select id="image-effect-1" name="text_end_effect[frame_1][]" style="display: none;" class="field select-text-effect">
 									<option value="0">Select Effect</option>
 									<option value="fadein">FadeIn</option>
 									<option value="fadeout">FadeOut</option>
@@ -134,6 +179,7 @@
 		</div>
 		 <div class="row">
 		 	<input type="hidden" id="total_frame_count" name="total_frame_count" value="1" />
+		 	<input type="hidden" id="max-stop-time" name="max_stop_time" value="0" />
 	     	<input type="submit" value="Submit" class="submit-button">
 	     	<div class="clear"></div>
 	    </div>
@@ -154,6 +200,18 @@ $(document).ready(function() {
 		$('#picker').hide();
 	});
 	
+	var maxStopTime = 0;
+	$('#html-banner-generator').submit(function(){
+		$('.stop-time').each(function(){
+			var timeValue = parseInt($(this).val().trim());
+			if(timeValue > maxStopTime){
+				maxStopTime = timeValue;
+			}
+		});
+		
+		$('#max-stop-time').val(maxStopTime);
+	});
+	
 	$(document).on('click', 'input[name="loop"]', function(){
 		if(parseInt($(this).val())){
 			$('#no-of-time').show();
@@ -161,40 +219,74 @@ $(document).ready(function() {
 			$('#no-of-time').hide().val('');
 		}
 	});
+	$(document).on('click', 'input[name="gradient"]', function(){
+		if(parseInt($(this).val())){
+			$('#gradient-value').show();
+		}else{
+			$('#gradient-value').hide().val('');
+		}
+	});
 	$(document).on('click', '.banner-text', function(){
 		if(parseInt($(this).val())){
 			$(this).siblings('.banner-text-field').show();
 			$(this).siblings('.time-field').show();
 			$(this).siblings('.select-text-effect').show();
+			$(this).siblings('.fields-separator').show();
 		}else{
 			$(this).siblings('.banner-text-field').hide().val('');
 			$(this).siblings('.time-field').hide().val('');
 			$(this).siblings('.select-text-effect').hide().val('0');
+			$(this).siblings('.fields-separator').hide();
 		}
 	});
 	$(document).on('click', '.image-file', function(){
 		if(parseInt($(this).val())){
 			$(this).siblings('.image-field').show();
 			$(this).siblings('.select-effect').show();
+			$(this).siblings('.width-label').show();
+			$(this).siblings('.height-label').show();
+			$(this).siblings('.fields-separator').show();
 		}else{
 			$(this).siblings('.image-field').hide().val('');
 			$(this).siblings('.select-effect').hide().val('0');
+			$(this).siblings('.width-label').hide();
+			$(this).siblings('.height-label').hide();
+			$(this).siblings('.fields-separator').hide();
 		}
 	});
 	
 	var htmlString = "";
 	var counter = 2;
 	$(document).on('click', '#add-more', function(){
+		var elementCount = $('.frame-inner-wrapper .inner-wrapper').length;
 		var currentFrameCount =$(this).parent().prev().val();
+		var innerWrappeerTop = $('.inner-wrapper-top').clone();
+		innerWrappeerTop.find('.frame-element-count').val(elementCount + 1);
 		htmlString = '<div class="inner-wrapper">' + 
-						$('.inner-wrapper-top').clone().html().replace(/\-1/g, '-' + counter).replace(/\[1\]/g, '[' + counter + ']').replace(/\_1/g, '_' + currentFrameCount) + 
+							innerWrappeerTop.html().replace(/\-1/g, '-' + counter).replace(/\[1\]/g, '[' + counter + ']').replace(/\_1/g, '_' + currentFrameCount) + 
 					'</div>';
-		$(this).closest('.lower-form-wrapper').append(htmlString);
+		//$(this).closest('.lower-form-wrapper').append(htmlString);
+		
+		$(this).closest('.lower-form-wrapper').find('.frame-count:last').before(htmlString);
+		
 		counter += 1;
 		
 		$('.radio').checkboxradio({
 	      icon: false
 	    });
+	});
+	
+	$(document).on('click', '.remove-element', function(){
+		var frameWrapper = $(this).parent().parent();
+		$(this).parent().remove();
+		
+		//rearrange element counts after removal
+		var remainingElement = frameWrapper.find('.frame-element-count');
+		var elementIndex = 1;
+		remainingElement.each(function(el){
+			$(this).val(elementIndex);
+			elementIndex++;
+		});
 	});
 	
 	var count = 2;

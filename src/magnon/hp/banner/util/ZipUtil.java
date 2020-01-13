@@ -12,14 +12,14 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipUtil {
     
-    private static List<String> filesListInDir = new ArrayList<String>();
+    private List<String> filesListInDir = new ArrayList<String>();
 
     public static void main(String[] args) {
         
         File dir = new File("F:\\Banner\\BannerServlet\\WebContent\\outputBanner\\Test2\\2019-10-11_1570776238524");
         String zipDirName = "F:\\Banner\\BannerServlet\\WebContent\\outputBanner\\Test2\\2019-10-11_1570776238524\\2019-10-11_1570776238524.zip";
       
-        ZipUtil.zipDirectory(dir, zipDirName);
+        new ZipUtil().zipDirectory(dir, zipDirName);
     }
 
     /**
@@ -27,7 +27,7 @@ public class ZipUtil {
      * @param dir
      * @param zipDirName
      */
-    public static void zipDirectory(File dir, String zipDirName) {
+    public void zipDirectory(File dir, String zipDirName) {
         try {
             populateFilesList(dir);
             //now zip files one by one
@@ -61,7 +61,7 @@ public class ZipUtil {
      * @param dir
      * @throws IOException
      */
-    private static void populateFilesList(File dir) throws IOException {
+    private void populateFilesList(File dir) throws IOException {
         File[] files = dir.listFiles();
         for(File file : files){
             if(file.isFile()) filesListInDir.add(file.getAbsolutePath());

@@ -52,15 +52,20 @@ public class BannerCreator {
 		    wrapperDiv =  BannerUtil.addHyperlinkToBannerWrapperContainer(bannerModel, wrapperDiv);
 		    
 		    //style
+		    //box-shadow is used for 1px inner border of wrapper
 		    String styleString = ".wrapper{\r\n" + 
 		    		"    width: "+bannerModel.getCanvas_width()+"px;\r\n" + 
 		    		"    height: "+bannerModel.getCanvas_height()+"px;\r\n" + 
 		    		"    background: "+bannerModel.getColorpicker()+";\r\n" + 
 		    		"    position: relative;\r\n" + 
 		    		"    cursor: pointer;\r\n" + 
+		    		"	 box-shadow: 0px 0px 0px 1px #000000 inset" +
 		    		"}\r\n"+
 		    		".wrapper .child{\r\n"
-		    		+ "display:  none;}\r\n";
+		    		+ "display:  none;}\r\n"
+		    		+ ".invisible {\r\n"
+		    		+ "	display: none;\r\n"
+		    		+ "}";
 		    
 		    List<ImageModel> frameImageElementList = new ArrayList<>();
 		    List<TextModel> frameTextElementList = new ArrayList<>();
@@ -70,16 +75,28 @@ public class BannerCreator {
 		    
 	    	//iterate multiple frames of banner
 		    int frameCounter = 1;
+		    String width = "";
+		    String height = "";
 	    	for (FrameModel firstFrame : frameList) {
 		    		//image element css
 		    		frameImageElementList = firstFrame.getImageList();
 		    		for (int i = 0; i < frameImageElementList.size(); i++) {
+		    			
+		    			width = frameImageElementList.get(i).getWidth().trim();
+			    		height = frameImageElementList.get(i).getHeight().trim();
+			    		if(width.equals("")) {
+			    			width = "100";
+			    		}
+			    		if(height.equals("")) {
+			    			height = "100";
+			    		}
+		    			
 		    			styleString +=  ".frame" + frameCounter + "-child-first-" + (i + 1 ) + "{\r\n" + 
-		    		    		"    width: 100px;\r\n" + 
-		    		    		"    height: 100px;\r\n" + 
-		    		    		"    background: #89fe76;\r\n" + 
+		    		    		"    width: " + width + "px;\r\n" + 
+		    		    		"    height: " + height + "px;\r\n" + 
+		    		    	//	"    background: #89fe76;\r\n" + 
 		    		    		"    position: absolute;\r\n";
-					    styleString += "	 background-image: url('images/" + frameImageElementList.get(i).getImagePath() + "')";
+					   // styleString += "	 background-image: url('images/" + frameImageElementList.get(i).getImagePath() + "')";
 					    styleString += "}\r\n";
 					    //append style to html
 					   // obj.appendStyle(styleString, html);
@@ -88,9 +105,7 @@ public class BannerCreator {
 		    		frameTextElementList = firstFrame.getTextList();
 		    		for (int i = 0; i < frameTextElementList.size(); i++) {
 					    styleString += ".frame" + frameCounter + "-child-second-" + (i + 1 ) + "{\r\n" + 
-					    		"    width: 100px;\r\n" + 
-					    		"    height: 100px;\r\n" + 
-					    		"    background: #FFC0CB;\r\n" + 
+					    		"    width: auto;\r\n" + 
 					    		"    position: absolute;\r\n}";
 					    //append style to html
 					    //obj.appendStyle(styleString, html);

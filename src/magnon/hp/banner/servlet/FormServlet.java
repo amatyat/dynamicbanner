@@ -3,10 +3,7 @@ package magnon.hp.banner.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +22,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import magnon.hp.banner.db.JDBCConncetionProvider;
 import magnon.hp.banner.html.BannerCreator;
 import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
@@ -88,6 +84,8 @@ public class FormServlet extends HttpServlet {
 		}
 
 		File imagefolderDir = new File(folderDir.getPath()+File.separator+"images");
+		
+		System.out.println("Image Folder:"+imagefolderDir.getAbsolutePath());
 
 		if(!imagefolderDir.exists()) {
 			imagefolderDir.mkdir();
@@ -99,10 +97,12 @@ public class FormServlet extends HttpServlet {
 
 		//	bannerModel.setFrames(frameList);
 
-		String canvas_width = null, canvas_height = null, colorpicker, hpl_link, target = null, animation_loop = null, loop_count = null, pause_on_hover = null;
+		String canvas_width = null, canvas_height = null, colorpicker, hpl_link, target = null, animation_loop = null, 
+				loop_count = null, pause_on_hover = null, gradient = null, gradient_value = null, replay = null, elementCountStr = null;
 
 		//total frames
 		int totalFrameCount = 0;
+		int elementCount = 0;
 
 
 
@@ -176,6 +176,9 @@ public class FormServlet extends HttpServlet {
 					if((fileItem.getFieldName()).equals("total_frame_count")) {
 						totalFrameCount = Integer.parseInt(fileItem.getString());
 					}
+					if((fileItem.getFieldName()).equals("max_stop_time")) {
+						bannerModel.setMax_stop_time(fileItem.getString());
+					}
 					if((fileItem.getFieldName()).equals("canvas_width")) {
 						canvas_width = fileItem.getString();
 						bannerModel.setCanvas_width(canvas_width);
@@ -187,6 +190,14 @@ public class FormServlet extends HttpServlet {
 					if((fileItem.getFieldName()).equals("colorpicker")) {
 						colorpicker = fileItem.getString();
 						bannerModel.setColorpicker(colorpicker);
+					}
+					if((fileItem.getFieldName()).equals("gradient")) {
+						gradient = fileItem.getString();
+						bannerModel.setIs_gradient(gradient);
+					}
+					if((fileItem.getFieldName()).equals("gradient_value")) {
+						gradient_value = fileItem.getString();
+						bannerModel.setGradient_value(gradient_value);
 					}
 					if((fileItem.getFieldName()).equals("hpl_link")) {
 						hpl_link = fileItem.getString();
@@ -202,11 +213,17 @@ public class FormServlet extends HttpServlet {
 					}
 					if((fileItem.getFieldName()).equals("no_of_time")) {
 						loop_count = fileItem.getString();
+						if(loop_count.equals(""))
+							loop_count = "0";
 						bannerModel.setLoop_count(loop_count);
 					}
 					if((fileItem.getFieldName()).equals("pause")) {
 						pause_on_hover = fileItem.getString();
 						bannerModel.setPause_on_hover(pause_on_hover);
+					}
+					if((fileItem.getFieldName()).equals("replay")) {
+						replay = fileItem.getString();
+						bannerModel.setReplay(replay);
 					}
 					if((fileItem.getFieldName()).equals("frame_start[]")) {
 						frameCount = Integer.parseInt(fileItem.getString());
@@ -238,7 +255,21 @@ public class FormServlet extends HttpServlet {
 						System.out.println("end"+imageList.get(0).getImagePath());
 					}
 
+					
+					if((fileItem.getFieldName()).equals("frame_element_count[frame_" + frameCount + "][]")) {
+						elementCountStr = fileItem.getString();
+						
+						
+						elementCount = Integer.parseInt(elementCountStr);
+						
+						System.out.println(bannerText+"Element Numner : " + elementCount);
+						
+						bannerText = new TextModel();
+						imageModel = new ImageModel();
+						bannerText.setElementNumber(elementCount);
+						imageModel.setElementNumber(elementCount);
 
+					}
 					if((fileItem.getFieldName()).equals("image_start_time[frame_" + frameCount + "][]")) {
 						onTime = fileItem.getString();
 
@@ -255,6 +286,22 @@ public class FormServlet extends HttpServlet {
 						}
 						imageModel.setOffTime(imageOffTime);
 					}
+					if((fileItem.getFieldName()).equals("image_end_start_time[frame_" + frameCount + "][]")) {
+						onTime = fileItem.getString();
+
+						if(onTime.trim().length() > 0) {
+							imageOnTime = Float.parseFloat(onTime);
+						}
+						imageModel.setEndOnTime(imageOnTime);
+					}
+					if((fileItem.getFieldName()).equals("image_end_stop_time[frame_" + frameCount + "][]")) {
+						offTime = fileItem.getString();
+
+						if(offTime.trim().length() > 0) {
+							imageOffTime = Float.parseFloat(offTime);
+						}
+						imageModel.setEndOffTime(imageOffTime);
+					}
 					if((fileItem.getFieldName()).equals("image_start_xy[frame_" + frameCount + "][]")) {
 						startCoordinates = fileItem.getString();
 
@@ -270,8 +317,8 @@ public class FormServlet extends HttpServlet {
 								startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
 							}
 						}
-						imageModel.setSartCoordinateX(startCoordinateX);
-						imageModel.setSartCoordinateY(startCoordinateY);
+						imageModel.setStartCoordinateX(startCoordinateX);
+						imageModel.setStartCoordinateY(startCoordinateY);
 					}
 					if((fileItem.getFieldName()).equals("image_stop_xy[frame_" + frameCount + "][]")) {
 						stopCoordinates = fileItem.getString();
@@ -291,15 +338,30 @@ public class FormServlet extends HttpServlet {
 						imageModel.setStopCoordinateX(stopCoordinateX);
 						imageModel.setStopCoordinateY(stopCoordinateY);
 					}
+					
+					if((fileItem.getFieldName()).equals("image_width[frame_" + frameCount + "][]")) {
+						imageModel.setWidth((fileItem.getString()));
+					}
+					
+					if((fileItem.getFieldName()).equals("image_height[frame_" + frameCount + "][]")) {
+						imageModel.setHeight((fileItem.getString()));
+					}
+					
 					if((fileItem.getFieldName()).equals("image_effect[frame_" + frameCount + "][]")) {
 						imageModel.setEffect(fileItem.getString());
+						
+						//imageList.add(imageModel);
+					}
+					
+					if((fileItem.getFieldName()).equals("image_end_effect[frame_" + frameCount + "][]")) {
+						imageModel.setEndEffect(fileItem.getString());
 						
 						imageList.add(imageModel);
 					}
 
 					if((fileItem.getFieldName()).equals("banner_text[frame_" + frameCount + "][]")) {
 
-						bannerText = new TextModel();
+						//bannerText = new TextModel();
 						bannerText.setText(fileItem.getString());
 					}
 					if((fileItem.getFieldName()).equals("text_start_time[frame_" + frameCount + "][]")) {
@@ -320,6 +382,24 @@ public class FormServlet extends HttpServlet {
 
 						bannerText.setOffTime(textOffTime);
 					}
+					if((fileItem.getFieldName()).equals("text_end_start_time[frame_" + frameCount + "][]")) {
+						onTime = fileItem.getString();
+
+						if(onTime.trim().length() > 0) {
+							textOnTime = Float.parseFloat(onTime);
+						}
+						bannerText.setEndOnTime(textOnTime);
+
+					}
+					if((fileItem.getFieldName()).equals("text_end_stop_time[frame_" + frameCount + "][]")) {
+						offTime = fileItem.getString();
+
+						if(offTime.trim().length() > 0) {
+							textOffTime = Float.parseFloat(offTime);
+						}
+
+						bannerText.setEndOffTime(textOffTime);
+					}
 					if((fileItem.getFieldName()).equals("text_start_xy[frame_" + frameCount + "][]")) {
 						startCoordinates = fileItem.getString();
 
@@ -335,8 +415,8 @@ public class FormServlet extends HttpServlet {
 								startCoordinateY = Float.parseFloat(startCoordinatesArray[1]);
 							}
 						}
-						bannerText.setSartCoordinateX(startCoordinateX);
-						bannerText.setSartCoordinateY(startCoordinateY);
+						bannerText.setStartCoordinateX(startCoordinateX);
+						bannerText.setStartCoordinateY(startCoordinateY);
 					}
 					if((fileItem.getFieldName()).equals("text_stop_xy[frame_" + frameCount + "][]")) {
 						stopCoordinates = fileItem.getString();
@@ -359,6 +439,11 @@ public class FormServlet extends HttpServlet {
 					if((fileItem.getFieldName()).equals("text_effect[frame_" + frameCount + "][]")) {
 						bannerText.setEffect(fileItem.getString());
 						
+						//bannerTextList.add(bannerText);
+					}
+					if((fileItem.getFieldName()).equals("text_end_effect[frame_" + frameCount + "][]")) {
+						bannerText.setEndEffect(fileItem.getString());
+						
 						bannerTextList.add(bannerText);
 					}
 
@@ -375,7 +460,7 @@ public class FormServlet extends HttpServlet {
 					fileItem.write(storeFile);
 					//file upload code ends
 
-					imageModel = new ImageModel();
+					//imageModel = new ImageModel();
 					imageModel.setImagePath(fileName);
 
 				}
@@ -383,19 +468,20 @@ public class FormServlet extends HttpServlet {
 			}
 
 			bannerModel.setFrames(frameList);
-
+			response.setContentType("text/html");
 			PrintWriter writer = response.getWriter();
 
 			String htmlRespone = "";
+			
+			
 			htmlRespone += BannerCreator.createBanner(bannerModel);
 
 			htmlRespone += "Download Banners from below: <br/>";
 
-			//htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+bannerModel.getFoldername()+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+bannerModel.getFoldername()+"</a>";
+			htmlRespone +="<br/><a href=\"UploadDownloadFileServlet?folder="+bannerModel.getFoldername()+"&user="+bannerModel.getUsername()+"&fileName="+"banner.html"+"\">"+bannerModel.getFoldername()+"</a>";
 
 			//Gets folder details from database 
-			//htmlRespone = DBOperations.select(bannerModel, htmlRespone);
-			Connection con = new JDBCConncetionProvider().connect();
+		/*	Connection con = new JDBCConncetionProvider().connect();
 			try {
 
 				Statement statement = con.createStatement();
@@ -410,9 +496,13 @@ public class FormServlet extends HttpServlet {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
+			
+			String imageFolderPath = "file://"+imagefolderDir.getAbsolutePath().replace("\\", "/");
+			
+			//System.out.println(imageFolderPath);
 			// return response
-			writer.println(htmlRespone);	
+			writer.println(htmlRespone.replace("images", imageFolderPath));	
 
 		} catch (FileUploadException e) {
 			e.printStackTrace();

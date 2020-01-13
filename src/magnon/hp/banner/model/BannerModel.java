@@ -9,16 +9,38 @@ public class BannerModel {
 	private String foldername;
 	private String canvas_width;
 	private String colorpicker;
+	private String is_gradient;
+	private String gradient_value;
 	private String hpl_link;
 	private String target;
 	private String animation_loop;
 	private String loop_count;
 	private String pause_on_hover;
+	private String replay;
+	private String max_stop_time;
 	private List<FrameModel> frames;
 	
 	
 	public String getColorpicker() {
 		return colorpicker;
+	}
+	public String getIs_gradient() {
+		return is_gradient;
+	}
+	public void setIs_gradient(String is_gradient) {
+		this.is_gradient = is_gradient;
+	}
+	public String getGradient_value() {
+		return gradient_value;
+	}
+	public void setGradient_value(String gradient_value) {
+		this.gradient_value = gradient_value;
+	}
+	public String getReplay() {
+		return replay;
+	}
+	public void setReplay(String replay) {
+		this.replay = replay;
 	}
 	public List<FrameModel> getFrames() {
 		return frames;
@@ -31,6 +53,12 @@ public class BannerModel {
 	}
 	public String getCanvas_height() {
 		return canvas_height;
+	}
+	public String getMax_stop_time() {
+		return max_stop_time;
+	}
+	public void setMax_stop_time(String max_stop_time) {
+		this.max_stop_time = max_stop_time;
 	}
 	public void setCanvas_height(String canvas_height) {
 		this.canvas_height = canvas_height;
