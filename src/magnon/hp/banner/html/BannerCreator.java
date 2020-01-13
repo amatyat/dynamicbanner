@@ -15,6 +15,7 @@ import com.hp.gagawa.java.elements.Script;
 import com.hp.gagawa.java.elements.Title;
 
 import magnon.hp.banner.db.DBOperations;
+import magnon.hp.banner.db.DBOperationsImpl;
 import magnon.hp.banner.html.javascript.ScriptCreator;
 import magnon.hp.banner.html.javascript.TweenMaxLibrary;
 import magnon.hp.banner.html.stylesheet.StyleSheetCreator;
@@ -165,9 +166,9 @@ public class BannerCreator {
 		}else {
 			System.out.println("Frame Model Is Empty");
 		}
-		
+		DBOperations dbOperations = new DBOperationsImpl();
 	    //Insert Banner Folder Records in Database
-	    DBOperations.insert(bannerModel);
+		dbOperations.insert(bannerModel);
 	    
 	    return html.write();
 	}
