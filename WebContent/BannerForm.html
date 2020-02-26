@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +8,10 @@
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script src="assets/js/farbtastic.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk=" crossorigin="anonymous"></script>
+	
+	<script src="https://maker.js.org/target/js/browser.maker.js" type="text/javascript"></script>
+	<script src="https://pomax.github.io/bezierjs/bezier.js" type="text/javascript"></script>
+	<script src="assets/js/opentype.js" type="text/javascript"></script>
 	
 	<link rel="stylesheet" href="assets/css/custom.css"></link>
 	<link rel="stylesheet" href="assets/css/farbtastic.css" type="text/css" />
@@ -44,8 +49,8 @@
 						<input type="radio" checked="checked" name="border" id="border-1" value="0" class="radio">
 						<label for="border-2">ON</label>
 						<input type="radio" name="border" id="border-2" value="1" class="radio">
-						<input type="text" id="colorpicker" name="colorpicker" value="#123456" class="field"/>
-						<div id="picker" style="display: none;"></div>
+						<input type="text" id="colorpicker" class="colorpicker" name="colorpicker" value="#123456" class="field"/>
+						<div class="picker" style="display: none;"></div>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -132,6 +137,7 @@
 									<option value="fadeout">FadeOut</option>
 								</select>
 								<span class="fields-separator">|</span>
+								<input type="text" name="image_end_effect_xy[frame_1][]" style="display: none;" placeholder="End X,Y" class="time-field image-field">
 								<input type="text" name="image_end_start_time[frame_1][]" style="display: none;" placeholder="End Start Time" class="time-field image-field">
 								<input type="text" name="image_end_stop_time[frame_1][]" style="display: none;" placeholder="End Stop Time" class="time-field image-field stop-time">
 								<select id="image-effect-1" name="image_end_effect[frame_1][]" style="display: none;" class="field select-effect">
@@ -150,8 +156,43 @@
 								<label for="frame_1-is-first-text-1">OFF</label>
 								<input type="radio" name="is_text[frame_1][]" id="frame_1-is-first-text-1" value="0" class="banner-text radio">
 								<label for="frame_1-is-second-text-1">ON</label>
-								<input type="radio" name="is_text[frame_1][]" id="frame_1-is-second-text-1" value="1" class="banner-text radio">
-								<input type="text" name="banner_text[frame_1][]" placeholder="Enter Text" class="banner-text-field field" style="display: none;"/>
+								<input type="radio" name="is_text[frame_1][]" id="frame_1-is-second-text-1" value="1" class="banner-text radio"><br /><br /><br /><br />
+								<textarea name="banner_text[frame_1][]" rows="5" cols="30" placeholder="Enter Text" class="banner-text-field field" style="display: none;"></textarea>
+								<!-- <input type="text" id="frame_1-is-first-text-stroke-color-1" class="colorpicker time-field" name="banner_text_stork_color[frame_1][]" title="Stork Color" value="#ed6bf5" class="field" style="display: none;"/>
+								<div class="picker" style="display: none;"></div>-->
+								<input type="text" id="frame_1-is-first-text-color-1" class="colorpicker time-field" name="banner_text_color[frame_1][]" title="Fill Color" value="#ed6bf5" class="field" style="display: none;"/>
+								<div class="picker" style="display: none;"></div>
+								<select name="text_font_size[frame_1][]" style="display: none;" class="field select-text-effect select-text-font-size">
+									<option value="0">Select Font Size</option>
+									<option value="20">20</option>
+									<option value="25">25</option>
+									<option value="40">40</option>
+									<option value="45">45</option>
+								</select>
+								<select name="text_font[frame_1][]" style="display: none;" class="field select-text-effect select-text-font">
+									<option value="0">Select Fonts</option>
+									<option value="HPSimplified.ttf">HPSimplified</option>
+									<option value="HPSimplified_Rg.ttf">HPSimplified_Rg</option>
+								</select>
+								<select name="text_justification[frame_1][]" style="display: none;" class="field select-text-effect select-text-justification">
+									<option value="0">Select Text Justification</option>
+									<option value="center">Center</option>
+									<option value="left">Left Justify</option>
+									<option value="right">Right Justify</option>
+								</select>
+								<select name="text_direction[frame_1][]" style="display: none;" class="field select-text-effect select-text-direction">
+									<option value="0">Select Text Direction</option>
+									<option value="left-to-rigth">Left To Right</option>
+									<option value="right-to-left">Right To Left</option>
+								</select>
+								<input type="text" name="text_width[frame_1][]" style="display: none;" placeholder="Width" class="time-field text-svg-width"><span class="width-label">px</span>
+								<input type="text" name="text_height[frame_1][]" style="display: none;" placeholder="Height" class="time-field text-svg-height"><span class="height-label">px</span>
+								<button type="button" class="generate-svg">Generate SVG</button>
+								<br />
+								<br />
+								<textarea name="banner_text_svg[frame_1][]" rows="5" cols="30" placeholder="SVG Output" style="display: none;" class="select-text-effect select-text-svg-value"></textarea>
+								<span class="select-text-effect svg-wrapper" style="display: none;"></span><br /><br /><br /><br />
+								<br />
 								<input type="text" name="text_start_xy[frame_1][]" placeholder="Start X,Y" class="time-field" style="display: none;"/>
 								<input type="text" name="text_stop_xy[frame_1][]" placeholder="Stop X,Y" class="time-field" style="display: none;"/>
 								<input type="text" name="text_start_time[frame_1][]" placeholder="Start Time" class="time-field" style="display: none;"/>
@@ -162,6 +203,7 @@
 									<option value="fadeout">FadeOut</option>
 								</select>
 								<span class="fields-separator">|</span>
+								<input type="text" name="text_end_effect_xy[frame_1][]" placeholder="End X,Y" class="time-field" style="display: none;"/>
 								<input type="text" name="text_end_start_time[frame_1][]" placeholder="End Start Time" class="time-field" style="display: none;"/>
 								<input type="text" name="text_end_stop_time[frame_1][]" placeholder="End Stop Time" class="time-field stop-time" style="display: none;"/>
 								<select id="image-effect-1" name="text_end_effect[frame_1][]" style="display: none;" class="field select-text-effect">
@@ -191,13 +233,17 @@ $(document).ready(function() {
       icon: false
     });
 	
-	$('#picker').farbtastic('#colorpicker');
 	
-	$('#colorpicker').on('click', function(){
-		$('#picker').show();
+	
+	$('.picker').each(function(){
+		$(this).farbtastic('#' + $(this).prev().attr('id'));
 	});
-	$('#colorpicker').on('blur', function(){
-		$('#picker').hide();
+	
+	$(document).on('click', '.colorpicker', function(){
+		$(this).next('.picker').show();
+	});
+	$(document).on('blur', '.colorpicker', function(){
+		$(this).next('.picker').hide();
 	});
 	
 	var maxStopTime = 0;
@@ -232,11 +278,13 @@ $(document).ready(function() {
 			$(this).siblings('.time-field').show();
 			$(this).siblings('.select-text-effect').show();
 			$(this).siblings('.fields-separator').show();
+			$(this).siblings('.colorpicker').show();
 		}else{
 			$(this).siblings('.banner-text-field').hide().val('');
 			$(this).siblings('.time-field').hide().val('');
 			$(this).siblings('.select-text-effect').hide().val('0');
 			$(this).siblings('.fields-separator').hide();
+			$(this).siblings('.colorpicker').hide();
 		}
 	});
 	$(document).on('click', '.image-file', function(){
@@ -262,6 +310,7 @@ $(document).ready(function() {
 		var currentFrameCount =$(this).parent().prev().val();
 		var innerWrappeerTop = $('.inner-wrapper-top').clone();
 		innerWrappeerTop.find('.frame-element-count').val(elementCount + 1);
+		innerWrappeerTop.find('.svg-wrapper').html("");
 		htmlString = '<div class="inner-wrapper">' + 
 							innerWrappeerTop.html().replace(/\-1/g, '-' + counter).replace(/\[1\]/g, '[' + counter + ']').replace(/\_1/g, '_' + currentFrameCount) + 
 					'</div>';
@@ -274,6 +323,10 @@ $(document).ready(function() {
 		$('.radio').checkboxradio({
 	      icon: false
 	    });
+		
+		$('.picker').each(function(){
+			$(this).farbtastic('#' + $(this).prev().attr('id'));
+		});
 	});
 	
 	$(document).on('click', '.remove-element', function(){
@@ -291,6 +344,9 @@ $(document).ready(function() {
 	
 	var count = 2;
 	$(document).on('click', '#add-more-frame', function(){
+		var innerWrappeerTop = $('.inner-wrapper-top').clone();
+		innerWrappeerTop.find('.svg-wrapper').html("");
+		
 		htmlString = '<div class="frame-inner-wrapper">'+
 						'<h2>Frame ' + count + '</h2>'+
 						'<div class="lower-form-wrapper">'+
@@ -300,7 +356,7 @@ $(document).ready(function() {
 							'</div>'+
 							'<input type="hidden" name="frame_count[]" value="' + count + '" class="frame-count" />'+
 							'<div class="inner-wrapper">' + 
-								$('.inner-wrapper-top').clone().html().replace(/\_1/g, '_' + count) + 
+							innerWrappeerTop.html().replace(/\_1/g, '_' + count) + 
 							'</div>'+
 						'</div>'+
 						'<input type="hidden" id="frame_end" name="frame_end[]" value="' + count + '" class="frame-count" />'+
@@ -314,7 +370,262 @@ $(document).ready(function() {
 		$('.radio').checkboxradio({
 	      icon: false
 	    });
+		
+		$('.picker').each(function(){
+			$(this).farbtastic('#' + $(this).prev().attr('id'));
+		});
 	});
+	
+	//justify text to center
+	function justifyToCenter(textContentModelJson, textFontSize, fillColor, svgWidth, svgHeight){
+		coordinateNextLine = parseInt(textFontSize);
+		
+		//set x and y coordinates for next line
+		index = 0;
+		for (var key in textContentModelJson.models) {
+			if (textContentModelJson.models.hasOwnProperty(key)) {
+				var plate = textContentModelJson.models[key];
+				  
+				//calculate y coordinate for next line
+				coordinateNextLinePixel = coordinateNextLine * index;
+				//set x and y coordinates for next line
+				plate.origin = [0, -coordinateNextLinePixel];
+				//align text to center
+				makerjs.model.center(plate.models.outer);
+				
+				index++;
+			}
+		}
+		
+		//convert all the lines to svg code
+		var svg = makerjs.exporter.toSVG(textContentModelJson, {strokeWidth: 0, fill: fillColor, svgAttrs: {width: svgWidth, height: svgHeight}});
+		
+		//populate textarea with svg code
+		$(el).siblings('.select-text-svg-value').val(svg);
+		//display svg
+		$(el).siblings('.svg-wrapper').html(svg);
+		
+		return false;
+	}
+	
+	//justify text to right
+	function justifyToRight(textContentModelJson, textFontSize, fillColor , svgWidth, svgHeight){
+		coordinateNextLine = parseInt(textFontSize);
+		
+		var svgStringLengthWithFontSize = [];
+		index = 0;
+		//calculate svg string width with font size
+		for (var key in textContentModelJson.models) {
+		  if (textContentModelJson.models.hasOwnProperty(key)) {
+		    var plate = textContentModelJson.models[key];
+		    
+		    svg = makerjs.exporter.toSVG(plate, {strokeWidth: 0, fill: fillColor});
+		    
+		    var svgWidth = parseFloat($(svg).attr('width'));
+		    svgWidth = svgWidth.toFixed(2);
+		    
+		    svgStringLengthWithFontSize.push(svgWidth);
+		    
+			index++;
+		  }
+		}
+		
+		//get largest svg string width with font size
+		var maxSvgStringLengthWithFontSize = svgStringLengthWithFontSize.reduce(function(a, b) {
+		    return Math.max(a, b);
+		});
+		
+		//set x and y coordinates for next line
+		index = 0;
+		for (var key in textContentModelJson.models) {
+		  if (textContentModelJson.models.hasOwnProperty(key)) {
+		    var plate = textContentModelJson.models[key];
+		    svgWidth = svgStringLengthWithFontSize[index];
+		    
+			//calculate y coordinate for next line
+			coordinateNextLinePixel = coordinateNextLine * index;
+			//set x and y coordinates for next line
+			plate.origin = [(maxSvgStringLengthWithFontSize - svgWidth), -coordinateNextLinePixel];
+			
+			index++;
+		  }
+		}
+		
+		//convert all the lines to svg code
+		var svg = makerjs.exporter.toSVG(textContentModelJson, {strokeWidth: 0, fill: fillColor, svgAttrs: {width: svgWidth, height: svgHeight}});
+		
+		//populate textarea with svg code
+		$(el).siblings('.select-text-svg-value').val(svg);
+		//display svg
+		$(el).siblings('.svg-wrapper').html(svg);
+		
+		return false;
+	}
+	
+	//code to convert text to svg starts
+	//var fullFontPath = "assets/fonts/";
+	var fullFontPath = "http://localhost:8080/fonts/";
+	var fontNameOptions = "";
+	var makerjs = require('makerjs')
+	var textModel;
+	$(document).on('click', '.generate-svg', function(){
+		el = this;
+		fontName = $(this).siblings('.select-text-font').val();
+		//textContent = $(el).prev().prev().prev().prev().prev().prev().val().trim();
+		//textContent = $(el).prev().prev().prev().prev().val();
+		
+		textContent = $(this).siblings('.banner-text-field').val();
+		
+		//storkColor = $(el).prev().prev().prev().prev().prev().val().trim();
+		fillColor = $(this).siblings('.colorpicker').val();
+		textFontSize = $(this).siblings('.select-text-font-size').val();
+		justifyText = $(this).siblings('.select-text-justification').val();
+		svgWidth = $(this).siblings('.text-svg-width').val().trim();
+		svgHeight = $(this).siblings('.text-svg-height').val().trim();
+		coordinateNextLine = parseInt(textFontSize);
+		textContentArray = [];
+		textContentModelJson = {models: {}};
+		errorFlag = false;
+		message = "";
+		
+		if(textContent == ""){
+			errorFlag = true;
+			message += "Please fill the text field.\n";
+		}
+		if(textFontSize == 0){
+			errorFlag = true;
+			message += "Please select the font size.\n";
+		}
+		
+		if(!errorFlag){
+			opentype.load(fullFontPath + fontName, function(err, font) {
+			    if (err){
+			        alert('Could not load font: ' + err);
+			    }
+			    else{
+			    	//check if text content have multiple lines
+					if(textContent.indexOf('\n') >= 0){
+						//split the the text content in multi lines
+						textContentArray = textContent.split('\n');
+						
+						//itrate the text lines
+						for(index = 0; index <= (textContentArray.length - 1 ); index++){
+							if(textContentArray[index] != ""){
+								
+								console.log(textContentArray[index]);
+								
+								//create makerjs model object
+								var plate = {
+										models: {
+											outer: new makerjs.models.Text(font, textContentArray[index], textFontSize, false)
+										}
+									};
+								
+								//if line number is >= 2 means array index >= 0
+								if(index > 0){
+									//calculate y coordinate for next line
+									coordinateNextLinePixel = coordinateNextLine * index;
+									//set x and y coordinates for next line
+									plate.origin = [0, -coordinateNextLinePixel];
+								}
+								//create makerjs model object of models
+								textContentModelJson.models['textContentModel' + index] =  plate;
+							}
+						}
+						
+						//justify the text
+						if(justifyText == "right"){
+							justifyToRight(textContentModelJson, textFontSize, fillColor, svgWidth, svgHeight);
+						}
+						else if(justifyText == "center"){
+							justifyToCenter(textContentModelJson, textFontSize, fillColor, svgWidth, svgHeight);
+						}
+						
+						//convert all the lines to svg code
+						//var svg = makerjs.exporter.toSVG(textContentModelJson, {stroke: storkColor, fill: fillColor});
+						var svg = makerjs.exporter.toSVG(textContentModelJson, {strokeWidth: 0, fill: fillColor, svgAttrs: {width: svgWidth, height: svgHeight}});
+						//populate textarea with svg code
+						$(el).siblings('.select-text-svg-value').val(svg);
+						//display svg
+						$(el).siblings('.svg-wrapper').html(svg);
+						
+						//console.log(JSON.stringify(textContentModelJson));
+						
+					}else{	//if text content is of single line
+				        textModel = new makerjs.models.Text(font, textContent, textFontSize, false);
+						//var svg = makerjs.exporter.toSVG(textModel,{stroke: '#000', fill: '#000'});
+						var svg = makerjs.exporter.toSVG(textModel,{strokeWidth: 0, fill: fillColor, svgAttrs: {width: svgWidth, height: svgHeight}});
+						$(el).siblings('.select-text-svg-value').val(svg);
+						$(el).siblings('.svg-wrapper').html(svg);
+				    }
+			    }
+			});
+		}else{
+			alert(message);
+			$(el).val('0');
+		}
+		//text = textContent.split("\n");
+		
+		//alert(JSON.stringify(textContentModelJson));
+		/*return false;
+		
+		if(textContent == ""){
+			errorFlag = true;
+			message += "Please fill the text field.\n";
+		}
+		if(textFontSize == 0){
+			errorFlag = true;
+			message += "Please select the font size.\n";
+		}
+		
+		if(!errorFlag){
+			opentype.load(fullFontPath + fontName, function(err, font) {
+			    if (err){
+			        alert('Could not load font: ' + err);
+			    }
+			    else{
+			        textModel = new makerjs.models.Text(font, textContent, textFontSize, false);
+					//var svg = makerjs.exporter.toSVG(textModel,{stroke: '#000', fill: '#000'});
+					var svg = makerjs.exporter.toSVG(textModel,{stroke: storkColor, fill: fillColor});
+					//document.write(svg);
+					//$(el).next().val(svg);
+					//$(el).next().next('.svg-wrapper').html(svg);
+			    }
+			});
+		}else{
+			alert(message);
+			$(el).val('0');
+		}
+		*/
+	});
+	
+	$(document).on('change', '.select-text-font-size', function(){
+		$(this).next('.select-text-font').val(0);
+	});
+	
+	//populate font dorpdown
+	/*$.get(fullFontPath, (data) => 
+	{
+	    let listing = parseDirectoryListing(data);
+	    
+	    listing.forEach(getFontNames);
+	    
+	    $('.select-text-font').append(fontNameOptions);
+	});
+	*/
+
+	function parseDirectoryListing(text){
+	    let docs = text
+	                 .match(/href="([\w]+)/g) // pull out the hrefs
+	                 .map((x) => x.replace('href="', '')); // clean up
+	    //console.log(docs);
+	    return docs;
+	}
+
+	function getFontNames(item, index, arr) {
+		fontNameOptions += '<option value="' + item + '.ttf">' + item + '</option>';
+	}
+	//code to convert text to svg ends
 });
 </script>
 </body>

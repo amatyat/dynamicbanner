@@ -12,6 +12,8 @@ public class ImageModel {
 	private float startCoordinateY;
 	private float stopCoordinateX;
 	private float stopCoordinateY;
+	private float endCoordinateX;
+	private float endCoordinateY;
 	private String effect;
 	private String endEffect;
 	private String width;
@@ -109,6 +111,18 @@ public class ImageModel {
 		this.stopCoordinateY = stopCoordinateY;
 	}
 	
+	public float getEndCoordinateX() {
+		return endCoordinateX;
+	}
+	public void setEndCoordinateX(float endCoordinateX) {
+		this.endCoordinateX = endCoordinateX;
+	}
+	public float getEndCoordinateY() {
+		return endCoordinateY;
+	}
+	public void setEndCoordinateY(float endCoordinateY) {
+		this.endCoordinateY = endCoordinateY;
+	}
 	public String toString() {
 		return "imagePath :"+this.imagePath;
 	}

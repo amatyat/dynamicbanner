@@ -5,6 +5,7 @@ import java.util.List;
 public class BannerModel {
 	
 	private String canvas_height;
+	private String banner_file_path;
 	private String username;
 	private String foldername;
 	private String canvas_width;
@@ -21,6 +22,12 @@ public class BannerModel {
 	private List<FrameModel> frames;
 	
 	
+	public String getBanner_file_path() {
+		return banner_file_path;
+	}
+	public void setBanner_file_path(String banner_file_path) {
+		this.banner_file_path = banner_file_path;
+	}
 	public String getColorpicker() {
 		return colorpicker;
 	}

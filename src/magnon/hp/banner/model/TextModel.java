@@ -12,8 +12,15 @@ public class TextModel {
 	private float startCoordinateY;
 	private float stopCoordinateX;
 	private float stopCoordinateY;
+	private float endCoordinateX;
+	private float endCoordinateY;
 	private String effect;
 	private String endEffect;
+	private String bannerTextStorkColor;
+	private String bannerTextColor;
+	private String textFontSize;
+	private String textFont;
+	private String bannerTextSvg;
 	private int elementNumber;
 	
 	public int getElementNumber() {
@@ -93,6 +100,48 @@ public class TextModel {
 	}
 	public void setStopCoordinateY(float stopCoordinateY) {
 		this.stopCoordinateY = stopCoordinateY;
+	}
+	public float getEndCoordinateX() {
+		return endCoordinateX;
+	}
+	public void setEndCoordinateX(float endCoordinateX) {
+		this.endCoordinateX = endCoordinateX;
+	}
+	public float getEndCoordinateY() {
+		return endCoordinateY;
+	}
+	public void setEndCoordinateY(float endCoordinateY) {
+		this.endCoordinateY = endCoordinateY;
+	}
+	public String getBannerTextStorkColor() {
+		return bannerTextStorkColor;
+	}
+	public void setBannerTextStorkColor(String bannerTextStorkColor) {
+		this.bannerTextStorkColor = bannerTextStorkColor;
+	}
+	public String getBannerTextColor() {
+		return bannerTextColor;
+	}
+	public void setBannerTextColor(String bannerTextColor) {
+		this.bannerTextColor = bannerTextColor;
+	}
+	public String getTextFontSize() {
+		return textFontSize;
+	}
+	public void setTextFontSize(String textFontSize) {
+		this.textFontSize = textFontSize;
+	}
+	public String getTextFont() {
+		return textFont;
+	}
+	public void setTextFont(String textFont) {
+		this.textFont = textFont;
+	}
+	public String getBannerTextSvg() {
+		return bannerTextSvg;
+	}
+	public void setBannerTextSvg(String bannerTextSvg) {
+		this.bannerTextSvg = bannerTextSvg;
 	}
 	public String toString() {
 		return "text :"+this.text;

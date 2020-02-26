@@ -2,9 +2,11 @@ package magnon.hp.banner.html;
 
 import java.util.List;
 
+import com.hp.gagawa.java.elements.A;
 import com.hp.gagawa.java.elements.Body;
 import com.hp.gagawa.java.elements.Div;
 import com.hp.gagawa.java.elements.Img;
+import com.hp.gagawa.java.elements.Span;
 
 import magnon.hp.banner.model.BannerModel;
 import magnon.hp.banner.model.FrameModel;
@@ -15,6 +17,20 @@ public class HTMLCreator {
 
 
 	public static void generateHtml(Body body, BannerModel bannerModel, FrameModel firstFrame, Div wrapperDiv, int frameCounter) {
+		
+		if(frameCounter == 1) {
+			String ifReplay = bannerModel.getReplay().trim();
+			if(!ifReplay.equals("") && !ifReplay.equals("0")) {
+				/*
+				 * A ancorStr = new A(); ancorStr.setCSSClass("reply-button");
+				 * ancorStr.setId("reply-button"); ancorStr.appendText("Reply");
+				 * wrapperDiv.appendChild(ancorStr);
+				 */
+				
+				wrapperDiv.appendText("<i class=\"reply-button fas fa-redo\"></i>");
+			}
+		}
+		
 		String cssClass = "";
 		String elementId = "";
 		List<ImageModel> frameImageElementList = firstFrame.getImageList();
@@ -35,7 +51,9 @@ public class HTMLCreator {
 			elementId = "frame" + frameCounter + "-child-second-" + (i + 1 );
 			Div childSecondDiv = divContainerCreator(elementId, cssClass);
 			
-			childSecondDiv.appendText(frameTextElementList.get(i).getText());
+			//childSecondDiv.appendText(frameTextElementList.get(i).getText());
+			
+			childSecondDiv.appendText(frameTextElementList.get(i).getBannerTextSvg());
 			wrapperDiv.appendChild(childSecondDiv);
 		}
 		

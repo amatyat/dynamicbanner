@@ -17,5 +17,11 @@ public class TweenMaxLibrary {
 		scriptTagFirst.setAttribute("type", "text/javascript");
 		scriptTagFirst.setAttribute("src", "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js");
 		body.appendChild(scriptTagFirst);
+		
+		//append font awesome javascript library
+		scriptTagFirst = new Script("");
+		scriptTagFirst.setAttribute("type", "text/javascript");
+		scriptTagFirst.setAttribute("src", "https://kit.fontawesome.com/a076d05399.js");
+		body.appendChild(scriptTagFirst);
 	}
 }
